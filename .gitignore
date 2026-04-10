@@ -47,3 +47,16 @@ next-env.d.ts
 
 # Local temp files
 temp/
+
+# Playwright test output
+.playwright-mcp/
+test-results/
+playwright-report/
+
+# Dev screenshots (root-level PNG from Playwright / browser tools)
+/*.png
+/*.jpg
+/*.jpeg
+
+# Local Claude launch config
+.claude/launch.json
