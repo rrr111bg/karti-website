@@ -7,3 +7,9 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[[redirects]]
+  from = "/start"
+  to = "/start.html"
+  status = 200
+  force = true
