@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Netlify CLI build-artefacten (gegenereerd, niet linten):
+    ".netlify/**",
   ]),
 ]);
 

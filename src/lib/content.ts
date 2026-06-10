@@ -3,13 +3,31 @@
  *
  * All copy sourced from Brochure_Final.pdf (V8, march 2026),
  * patched via karti-dna + karti-funnel-copy audit (revision 2).
+ * Pricing aangepast juni 2026 in opdracht van Karti: 295 / 1.400 / 3.000
+ * (was 340 / 1.800 / 3.000).
  *
  * Do not edit copy here without checking against the authoritative brochure.
  */
 
 export const CALENDLY_URL = "https://calendly.com/kartihealth/kennismaking/";
 
+/**
+ * Calendly-link met UTM-tagging per plek op de site.
+ * Calendly bewaart UTM's per boeking, zodat zichtbaar is welke CTA
+ * de match-call opleverde (zonder cookies of pixels).
+ */
+export function calendlyUrl(content: string): string {
+  const params = new URLSearchParams({
+    utm_source: "website",
+    utm_medium: "cta",
+    utm_campaign: "matchcall",
+    utm_content: content,
+  });
+  return `${CALENDLY_URL}?${params.toString()}`;
+}
+
 export const NAV_LINKS = [
+  { href: "#methode", label: "Methode" },
   { href: "#nasra", label: "Over Nasra" },
   { href: "#bouwstenen", label: "Bouwstenen" },
   { href: "#trajecten", label: "The Karti Way" },
@@ -19,7 +37,10 @@ export const HERO = {
   label: "WIJSHEID VAN HET VROUWENLICHAAM",
   headline: ["Jouw lichaam fluistert.", "Ik leer je luisteren."],
   pullQuote: "De handleiding die je nooit hebt gekregen. Over jezelf.",
+  primaryCta: "Plan mijn match-call",
+  ctaSub: "15 MINUTEN · VRIJBLIJVEND · EERLIJK",
   secondaryCta: "Lees hoe ik werk",
+  trustLine: "1:1 begeleiding door Nasra · HBO-verpleegkundige",
 } as const;
 
 export const HERKENNING = {
@@ -32,6 +53,36 @@ export const HERKENNING = {
   ],
   body: "Je zoekt hulp, maar krijgt de pil als oplossing of de boodschap dat het erbij hoort.",
   deepRoseQuote: "Het hoort er niet bij!",
+} as const;
+
+export const METHODIEK = {
+  label: "DE KARTI METHODE",
+  headline: "Ik start niet bij je hormonen. Ik start bij jou.",
+  intro:
+    "Vier pijlers, altijd in dezelfde volgorde. Omdat klachten zelden beginnen waar ze pijn doen.",
+  pijlers: [
+    {
+      index: "01",
+      title: "Emotionele heling",
+      body: "Alles begint bij bewustzijn. Onuitgesproken stress en oude patronen slaan zich op in je lichaam. We maken ze zichtbaar en doorbreken ze.",
+    },
+    {
+      index: "02",
+      title: "Darmen & voeding",
+      body: "Je bloedsuiker en je darmen dragen je energie, je stemming en je hormonen. Hier leggen we het fundament, afgestemd op jou.",
+    },
+    {
+      index: "03",
+      title: "Hormonen",
+      body: "Je hormonen zijn geen vijand, ze zijn een boodschapper. We herstellen de balans met voeding, ritme en gerichte ondersteuning.",
+    },
+    {
+      index: "04",
+      title: "Cyclussynchronisatie",
+      body: "Vier fases, vier seizoenen. Je leert leven met je cyclus in plaats van ertegen. Winter, lente, zomer en herfst, elke maand opnieuw.",
+    },
+  ],
+  closing: "Deze volgorde is geen toeval. Het is de reden dat het werkt.",
 } as const;
 
 export const BOUWSTENEN = {
@@ -91,7 +142,7 @@ export const TRAJECTEN = {
     {
       tier: "EENMALIGE DEEP DIVE",
       name: "De Inzicht Sessie",
-      price: "EUR 340",
+      price: "€ 295",
       body: "Helderheid over een specifieke klacht. In 1 sessie.",
       features: [
         "Intakevragen vooraf + kennismakingsgesprek",
@@ -101,9 +152,9 @@ export const TRAJECTEN = {
       featured: false,
     },
     {
-      tier: "DE TRANSFORMATIE · MEEST GEKOZEN",
+      tier: "DE TRANSFORMATIE",
       name: "The Body & Being Guide",
-      price: "EUR 1.800",
+      price: "€ 1.400",
       body: "De handleiding die je nooit hebt gekregen. Over jezelf.",
       features: [
         "Jouw persoonlijke Blueprint (50+ pagina's, op jouw profiel)",
@@ -119,7 +170,7 @@ export const TRAJECTEN = {
     {
       tier: "HET VOLLEDIGE PAD",
       name: "The Embodiment Blueprint",
-      price: "EUR 3.000",
+      price: "€ 3.000",
       body: "Alles uit de Body & Being Guide, plus:",
       features: [
         "Lab analyse: volledige hormonale screening",
@@ -245,6 +296,7 @@ export const FOOTER = {
     email: "info@kartihealth.com",
   },
   links: [
+    { href: "#methode", label: "Methode" },
     { href: "#nasra", label: "Over Nasra" },
     { href: "#bouwstenen", label: "Bouwstenen" },
     { href: "#trajecten", label: "The Karti Way" },

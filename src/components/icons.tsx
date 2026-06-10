@@ -255,3 +255,52 @@ export const SineWaveIcon = (p: P) => (
     <path d="M3 16 Q 8 6 13 16 T 23 16 T 29 16" />
   </svg>
 );
+
+/* ─── Karti methodiek-iconen (architecturaal, geen clipart) ─── */
+
+/** Pijler 1 — Bewustzijn: fine-line cirkel met kern */
+export const AwarenessIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" {...p}>
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="1.6" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+/** Pijler 2 — Darmen & voeding: vloeiende dubbellijn met dots (pathway) */
+export const PathwayIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" {...p}>
+    <path d="M3 9c3.5 0 5.5 6 9 6s5-6 9-6" />
+    <path d="M3 14c3.5 0 5.5-6 9-6s5 6 9 6" opacity="0.55" />
+    <circle cx="7" cy="11.5" r="0.9" fill="currentColor" stroke="none" />
+    <circle cx="17" cy="11.5" r="0.9" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+/** Pijler 3 — Hormonen: balanslijn op steunpunt */
+export const BalanceIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" {...p}>
+    <path d="M4 9.5 20 8" />
+    <path d="M12 8.8V19" />
+    <path d="M8.5 19h7" />
+    <circle cx="4.6" cy="9.4" r="1.5" />
+    <circle cx="19.4" cy="8.1" r="1.5" />
+  </svg>
+);
+
+/** Pijler 4 — Cyclussynchronisatie: seizoenscirkel in vier kwarten */
+export const SeasonsIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" {...p}>
+    <path d="M12 3a9 9 0 0 1 9 9" />
+    <path d="M21 12a9 9 0 0 1-9 9" opacity="0.75" />
+    <path d="M12 21a9 9 0 0 1-9-9" opacity="0.5" />
+    <path d="M3 12a9 9 0 0 1 9-9" opacity="0.3" />
+    <circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none" />
+  </svg>
+);
+
+/** Sluiten (mobiel menu) */
+export const CloseIcon = (p: P) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" {...p}>
+    <path d="m6 6 12 12M18 6 6 18" />
+  </svg>
+);

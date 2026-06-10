@@ -60,3 +60,6 @@ playwright-report/
 
 # Local Claude launch config
 .claude/launch.json
+
+# Netlify CLI artefacten
+.netlify/
