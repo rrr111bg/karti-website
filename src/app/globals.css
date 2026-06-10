@@ -11,8 +11,10 @@
   --color-heading: #3d3228;             /* Bark — H1/H2 */
   --color-espresso: #2e2622;
   --color-bark: #3d3228;
-  --color-stone: #8a8070;               /* Muted captions */
+  --color-stone: #8a8070;               /* Muted captions (alleen decoratief/groot) */
+  --color-stone-text: #6e6557;          /* AA-variant van Stone voor bodytekst op licht (4.8:1) */
   --color-warm-clay: #d6ccbe;
+  --color-gold-text: #80662c;           /* AA-goud voor kleine tekst/labels op licht (4.6:1) */
 
   /* ─── Gold system (structural) ──────────── */
   --color-gold: #b08d3e;                /* Aged Gold */
@@ -42,6 +44,16 @@
   --font-label: var(--font-label), "Work Sans", ui-sans-serif, system-ui, sans-serif;
 
   --radius-pill: 40px;
+
+  /* ─── Motion-taal: kalm, architecturaal, organisch ── */
+  --motion-quick: 200ms;                /* hovers, kleuren */
+  --motion-primary: 420ms;              /* primaire transities, altijd < 500ms */
+  --motion-reveal: 800ms;               /* ambient reveals (decoratief) */
+  --ease-organic: cubic-bezier(0.16, 0.84, 0.32, 1);
+
+  /* ─── Elevatie ──────────────────────────── */
+  --shadow-card: 0 24px 60px -24px rgba(26, 22, 20, 0.35);
+  --shadow-card-gold: 0 30px 70px -24px rgba(176, 141, 62, 0.45);
 }
 
 @layer base {
@@ -70,6 +82,16 @@
   }
   a { color: inherit; text-decoration: none; }
   button { font-family: inherit; }
+
+  /* Toetsenbord-focus: gouden ring, op donker de lichte goudvariant */
+  :focus-visible {
+    outline: 2px solid #80662c;
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+  .night-bloom :focus-visible {
+    outline-color: #e2cda0;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
@@ -230,6 +252,7 @@
     font-size: 15px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
+    white-space: nowrap;
     padding: 20px 52px;
     border-radius: 9999px;
     transition: background 0.25s ease, transform 0.2s ease;
@@ -237,6 +260,14 @@
     border: none;
   }
   .btn-primary-lg:hover { background: #9a7a35; }
+  /* smaller op kleine schermen zodat de CTA op één regel blijft */
+  @media (max-width: 420px) {
+    .btn-primary-lg {
+      font-size: 13px;
+      letter-spacing: 0.15em;
+      padding: 18px 34px;
+    }
+  }
 
   .btn-outline-gold {
     display: inline-flex;
@@ -250,6 +281,7 @@
     font-size: 14px;
     letter-spacing: 0.18em;
     text-transform: uppercase;
+    white-space: nowrap;
     padding: 16px 34px;
     border-radius: 9999px;
     border: 1px solid #b08d3e;
@@ -257,6 +289,40 @@
     cursor: pointer;
   }
   .btn-outline-gold:hover { background: rgba(176, 141, 62, 0.1); }
+
+  /* Header-CTA: compact op mobiel, regulier vanaf sm */
+  .btn-header {
+    padding: 12px 20px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+  }
+  @media (min-width: 640px) {
+    .btn-header {
+      padding: 14px 28px;
+      font-size: 13px;
+    }
+  }
+
+  /* Outline-knop op donkere (Night Bloom) vlakken */
+  .btn-outline-gold-light {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    color: #e2cda0;
+    font-family: var(--font-label), "Work Sans", system-ui, sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    padding: 16px 34px;
+    border-radius: 9999px;
+    border: 1px solid #c9a854;
+    transition: background 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+  }
+  .btn-outline-gold-light:hover { background: rgba(201, 168, 84, 0.12); }
 
   .btn-ghost-link {
     display: inline-flex;
@@ -309,15 +375,18 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-  /* ─── Scroll reveal utilities ────────────── */
-  .scroll-reveal-init {
+  /* ─── Scroll reveal utilities ──────────────
+     Verborgen beginstaat ALLEEN onder html.js (inline script in layout).
+     Zonder JavaScript (in-app browsers, uitgeschakeld JS) is alle content
+     direct zichtbaar — progressive enhancement, nooit verborgen content. */
+  html.js .scroll-reveal-init {
     opacity: 0;
     transform: translateY(28px);
     transition: opacity 900ms cubic-bezier(.16,.84,.32,1),
                 transform 900ms cubic-bezier(.16,.84,.32,1);
     will-change: opacity, transform;
   }
-  .scroll-reveal-in {
+  html.js .scroll-reveal-in {
     opacity: 1;
     transform: translateY(0);
   }
@@ -345,17 +414,94 @@
     letter-spacing: -0.005em;
   }
 
-  /* Hero mount stagger reveal */
-  .hero-reveal-item {
+  /* Scroll-gedreven reveal (Herkenning e.a.) — alleen met JS verborgen */
+  html.js .hero-reveal-item {
     opacity: 0;
     transform: translateY(22px);
     transition: opacity 800ms cubic-bezier(.16,.84,.32,1),
                 transform 800ms cubic-bezier(.16,.84,.32,1);
     will-change: opacity, transform;
   }
-  .hero-reveal-item.hero-reveal-in {
+  html.js .hero-reveal-item.hero-reveal-in {
     opacity: 1;
     transform: translateY(0);
+  }
+
+  /* Hero-entrance: pure CSS-animatie, draait bij first paint zonder te
+     wachten op hydration. Delay per element via --enter-delay. */
+  @keyframes hero-enter {
+    to { opacity: 1; transform: translateY(0); }
+  }
+  html.js .hero-enter-item {
+    opacity: 0;
+    transform: translateY(18px);
+    animation: hero-enter 800ms var(--ease-organic) forwards;
+    animation-delay: var(--enter-delay, 0ms);
+  }
+
+  /* ─── Sticky match-call balk (alleen mobiel) ─── */
+  @keyframes sticky-cta-rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .sticky-cta {
+    position: fixed;
+    left: 16px;
+    right: 16px;
+    bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 50;
+    animation: sticky-cta-rise 420ms var(--ease-organic);
+  }
+  .sticky-cta a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    background: #b08d3e;
+    color: #2e2622;
+    font-family: var(--font-label), "Work Sans", system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    padding: 17px 24px;
+    border-radius: 9999px;
+    box-shadow: 0 18px 44px -16px rgba(26, 22, 20, 0.5);
+  }
+  @media (min-width: 768px) {
+    .sticky-cta { display: none; }
+  }
+
+  /* ─── Wortelsysteem (hero) ──────────────────
+     SVG-paden tekenen zichzelf via CSS (geen JS nodig); de WebGL-laag
+     vervangt dit alleen op apparaten die het aantoonbaar aankunnen. */
+  @keyframes roots-draw {
+    to { stroke-dashoffset: 0; }
+  }
+  .roots-path {
+    stroke-dasharray: var(--len);
+    stroke-dashoffset: var(--len);
+    animation: roots-draw var(--dur, 2400ms) cubic-bezier(0.25, 0.6, 0.3, 1) forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+  @keyframes roots-dot-in {
+    to { opacity: var(--dot-o, 0.8); }
+  }
+  .roots-dot {
+    opacity: 0;
+    animation: roots-dot-in 700ms ease-out forwards;
+    animation-delay: var(--delay, 0ms);
+  }
+  .roots-svg {
+    transition: opacity 600ms ease;
+  }
+  .roots-svg.gl-active {
+    opacity: 0;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .roots-path { stroke-dashoffset: 0; animation: none; }
+    .roots-dot { opacity: var(--dot-o, 0.8); animation: none; }
   }
 
   /* Carousel progress bar (7s timer) */
@@ -383,7 +529,7 @@
     transform: translateX(4px);
   }
 
-  /* Animated gold divider */
+  /* Animated gold divider — zonder JS gewoon zichtbaar */
   .gold-divider-animated {
     display: block;
     width: 80px;
@@ -392,21 +538,33 @@
     opacity: 0.5;
     border: 0;
     margin: 40px 0;
+  }
+  html.js .gold-divider-animated {
     transform: scaleX(0);
     transform-origin: left center;
     transition: transform 800ms cubic-bezier(.16,.84,.32,1);
   }
-  .gold-divider-animated.in {
+  html.js .gold-divider-animated.in {
     transform: scaleX(1);
+  }
+  /* In de hero: CSS-animatie in plaats van JS-toggle */
+  @keyframes divider-grow {
+    to { transform: scaleX(1); }
+  }
+  html.js .gold-divider-enter {
+    transform: scaleX(0);
+    transform-origin: left center;
+    animation: divider-grow 800ms var(--ease-organic) forwards;
+    animation-delay: var(--enter-delay, 260ms);
   }
 
   /* Subtle image scale-on-reveal */
-  .image-reveal-scale {
+  html.js .image-reveal-scale {
     transform: scale(1.06);
     transition: transform 1400ms cubic-bezier(.16,.84,.32,1);
     will-change: transform;
   }
-  .image-reveal-scale.in {
+  html.js .image-reveal-scale.in {
     transform: scale(1);
   }
 

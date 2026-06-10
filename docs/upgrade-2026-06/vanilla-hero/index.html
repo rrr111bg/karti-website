@@ -1,0 +1,368 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Karti hero — vanilla referentie-implementatie</title>
+<!--
+  KARTI HERO · VANILLA VARIANT (geen framework)
+  ─────────────────────────────────────────────
+  Drie progressieve lagen, identiek aan de Next.js-versie:
+  1. Statische HTML/CSS — werkt overal, ook zonder JavaScript.
+  2. SVG-wortelsysteem dat zichzelf tekent met pure CSS-animatie
+     (zelfde geometrie als de productie-site, gegenereerd uit
+     src/lib/roots.ts met seed 20260330).
+  3. Optionele three.js-diepte (CDN, ES modules) — alleen geladen op
+     apparaten die WebGL2 aankunnen, buiten Instagram/TikTok in-app
+     browsers, en zonder prefers-reduced-motion.
+
+  Plak de sectie in elke statische pagina; alles staat in dit bestand.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Italiana&family=Lora:ital,wght@0,700;1,400&family=Instrument+Sans:wght@400;600&family=Work+Sans:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ── Dawn tokens ───────────────────────────── */
+  :root {
+    --sandstone: #f2eae0;
+    --morning: #faf6f0;
+    --espresso: #2e2622;
+    --bark: #3d3228;
+    --gold: #b08d3e;
+    --gold-warm: #c9a854;
+    --gold-text: #80662c;      /* AA op licht (4.6:1) */
+    --stone-text: #6e6557;     /* AA op licht (4.8:1) */
+    --rose-deep: #8b3a4a;
+    --ease-organic: cubic-bezier(.16,.84,.32,1);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--sandstone);
+    color: var(--espresso);
+    font-family: "Instrument Sans", system-ui, sans-serif;
+    font-size: 18px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+  :focus-visible { outline: 2px solid var(--gold-text); outline-offset: 3px; }
+
+  /* ── Hero layout ───────────────────────────── */
+  .hero { position: relative; overflow: hidden; min-height: 88vh; }
+  .hero-inner {
+    position: relative;
+    max-width: 1440px;
+    margin-inline: auto;
+    padding: 64px 24px 200px;
+    display: grid;
+    gap: 56px;
+    align-items: center;
+  }
+  @media (min-width: 1024px) {
+    .hero-inner { grid-template-columns: 1.05fr .95fr; padding: 96px 64px 220px; }
+  }
+  .label {
+    font-family: "Work Sans", sans-serif;
+    font-size: 12px; font-weight: 500;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--gold-text);
+    margin-bottom: 24px;
+  }
+  h1 {
+    font-family: "Lora", serif;
+    font-weight: 700;
+    font-size: clamp(34px, 8.4vw, 68px);
+    line-height: 1.05; letter-spacing: -.015em;
+    color: var(--bark);
+    text-wrap: balance;
+  }
+  .divider { width: 80px; height: 1px; background: var(--gold); opacity: .5; border: 0; margin: 28px 0; }
+  .quote {
+    font-family: "Lora", serif; font-style: italic;
+    font-size: clamp(22px, 2.2vw, 32px); line-height: 1.4;
+    color: var(--bark); margin-bottom: 36px;
+  }
+  .quote em { font-style: italic; color: var(--rose-deep); }
+  .cta-rij { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: "Work Sans", sans-serif; font-weight: 700;
+    font-size: 14px; letter-spacing: .16em; text-transform: uppercase;
+    white-space: nowrap; padding: 18px 40px; border-radius: 999px;
+    text-decoration: none; transition: background .25s ease;
+  }
+  .btn-goud { background: var(--gold); color: var(--espresso); }
+  .btn-goud:hover { background: #9a7a35; }
+  .btn-omlijnd { border: 1px solid var(--gold); color: var(--espresso); }
+  .btn-omlijnd:hover { background: rgba(176,141,62,.1); }
+  .cta-sub {
+    font-family: "Work Sans", sans-serif; font-size: 12px; font-weight: 500;
+    letter-spacing: .25em; text-transform: uppercase;
+    color: var(--stone-text); margin-top: 20px;
+  }
+  .trust { display: flex; align-items: center; gap: 12px; margin-top: 36px; font-size: 15px; }
+  .trust::before { content: ""; width: 5px; height: 5px; border-radius: 999px; background: var(--gold); opacity: .8; }
+
+  /* ── Portret in fine-line ringen ───────────── */
+  .portret { position: relative; justify-self: center; width: min(58vw, 250px); aspect-ratio: 1; }
+  @media (min-width: 1024px) { .portret { width: 400px; justify-self: end; } }
+  .portret::before, .portret::after {
+    content: ""; position: absolute; border-radius: 999px; border: 1px solid var(--gold-warm);
+  }
+  .portret::before { inset: -20px; opacity: .4; }
+  .portret::after { inset: -40px; opacity: .2; }
+  .portret img {
+    width: 100%; height: 100%; object-fit: cover; border-radius: 999px;
+    border: 1px solid rgba(176,141,62,.6); background: var(--morning);
+    transform: scale(1.0); display: block;
+  }
+
+  /* ── Hero entrance: puur CSS, geen JS nodig ── */
+  @keyframes hero-enter { to { opacity: 1; transform: translateY(0); } }
+  .enter { opacity: 0; transform: translateY(18px); animation: hero-enter .8s var(--ease-organic) forwards; animation-delay: var(--d, 0ms); }
+
+  /* ── Wortelsysteem (SVG, CSS draw-in) ──────── */
+  .roots {
+    position: absolute; inset-inline: 0; bottom: 0; height: 52%;
+    pointer-events: none; user-select: none;
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%);
+  }
+  @media (min-width: 1024px) { .roots { height: 68%; } }
+  .roots svg { width: 100%; height: 100%; transition: opacity .6s ease; }
+  .roots svg.gl-active { opacity: 0; }
+  .roots canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+  @keyframes roots-draw { to { stroke-dashoffset: 0; } }
+  .roots-path {
+    stroke-dasharray: var(--len); stroke-dashoffset: var(--len);
+    animation: roots-draw var(--dur, 2400ms) cubic-bezier(.25,.6,.3,1) var(--delay, 0ms) forwards;
+  }
+  @keyframes roots-dot-in { to { opacity: var(--dot-o, .8); } }
+  .roots-dot { opacity: 0; animation: roots-dot-in .7s ease-out var(--delay, 0ms) forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .enter { opacity: 1; transform: none; animation: none; }
+    .roots-path { stroke-dashoffset: 0; animation: none; }
+    .roots-dot { opacity: var(--dot-o, .8); animation: none; }
+  }
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="roots" aria-hidden="true">
+    <svg id="roots-svg" viewBox="0 0 1000 600" preserveAspectRatio="xMidYMin slice" fill="none" role="presentation">
+    <path class="roots-path" d="M 380.0 101.8 Q 355.4 94.7 342.9 91.6 Q 330.5 88.6 317.7 87.4 Q 304.9 86.2 292.3 83.6 Q 279.8 81.1 266.9 81.3 Q 254.1 81.5 241.3 82.3 L 228.5 83.1" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:170;--dur:1739ms;--delay:840ms"/>
+    <path class="roots-path" d="M 551.4 87.2 Q 516.9 89.1 499.7 90.2 Q 482.5 91.4 465.2 90.9 Q 448.0 90.5 430.8 92.2 Q 413.6 93.9 396.8 97.9 Q 380.0 101.8 363.8 107.8 Q 347.6 113.7 332.5 122.0 Q 317.3 130.2 301.9 138.0 L 286.5 145.8" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:304;--dur:2008ms;--delay:510ms"/>
+    <path class="roots-path" d="M 423.2 312.4 Q 423.9 331.7 426.0 341.2 Q 428.2 350.7 430.4 360.1 Q 432.7 369.5 434.4 379.1 Q 436.1 388.6 437.2 398.3 L 438.2 407.9" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:107;--dur:1613ms;--delay:1020ms"/>
+    <path class="roots-path" d="M 482.7 148.2 Q 467.7 173.4 463.2 187.3 Q 458.6 201.2 452.6 214.5 Q 446.6 227.8 442.7 241.9 Q 438.9 256.1 435.8 270.4 Q 432.8 284.7 428.0 298.5 Q 423.2 312.4 421.0 326.8 Q 418.7 341.3 414.8 355.4 L 410.9 369.5" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:258;--dur:1915ms;--delay:690ms"/>
+    <path class="roots-path" d="M 324.6 239.6 Q 300.1 234.8 287.8 232.0 Q 275.6 229.3 263.2 228.3 Q 250.7 227.3 238.3 228.9 Q 225.8 230.5 214.2 235.0 L 202.5 239.5" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:138;--dur:1675ms;--delay:1200ms"/>
+    <path class="roots-path" d="M 292.8 253.8 Q 282.3 273.1 278.7 283.5 Q 275.2 293.9 270.2 303.7 Q 265.3 313.5 259.9 323.1 Q 254.5 332.6 247.6 341.2 L 240.8 349.7" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:121;--dur:1642ms;--delay:840ms"/>
+    <path class="roots-path" d="M 118.1 347.8 Q 122.0 367.1 122.0 376.9 Q 121.9 386.7 122.8 396.5 Q 123.6 406.3 124.2 416.1 L 124.7 425.9" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:87;--dur:1573ms;--delay:1350ms"/>
+    <path class="roots-path" d="M 190.4 273.0 Q 170.6 289.9 161.3 299.1 Q 152.0 308.2 144.1 318.6 Q 136.1 328.9 127.1 338.4 Q 118.1 347.8 111.3 358.9 L 104.4 370.0" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:144;--dur:1687ms;--delay:1020ms"/>
+    <path class="roots-path" d="M 450.5 181.1 Q 419.3 196.5 402.8 202.0 Q 386.3 207.6 371.5 216.8 Q 356.7 226.0 340.7 232.8 Q 324.6 239.6 308.7 246.7 Q 292.8 253.8 276.1 258.7 Q 259.4 263.6 242.2 266.4 Q 225.0 269.1 207.7 271.1 L 190.4 273.0" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:307;--dur:2013ms;--delay:690ms"/>
+    <path class="roots-path" d="M 240.1 411.5 Q 230.8 436.4 227.2 449.2 Q 223.6 461.9 219.3 474.5 Q 215.0 487.1 209.6 499.2 Q 204.1 511.3 197.8 523.0 Q 191.6 534.7 185.7 546.6 Q 179.8 558.6 173.2 570.1 L 166.6 581.6" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:205;--dur:1809ms;--delay:1200ms"/>
+    <path class="roots-path" d="M 87.1 550.9 Q 69.7 555.7 60.9 557.4 Q 52.0 559.1 43.0 560.3 Q 34.1 561.4 25.4 563.9 L 16.7 566.3" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:80;--dur:1559ms;--delay:1260ms"/>
+    <path class="roots-path" d="M 58.1 621.4 Q 43.5 632.1 36.2 637.6 Q 29.0 643.0 23.0 649.9 L 17.1 656.8" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:60;--dur:1520ms;--delay:1350ms"/>
+    <path class="roots-path" d="M 116.8 480.7 Q 105.0 503.3 100.2 515.0 Q 95.3 526.8 91.2 538.8 Q 87.1 550.9 81.3 562.2 Q 75.5 573.5 71.3 585.6 Q 67.2 597.6 62.7 609.5 L 58.1 621.4" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:168;--dur:1736ms;--delay:1020ms"/>
+    <path class="roots-path" d="M 363.8 342.8 Q 332.8 359.9 317.1 368.1 Q 301.4 376.2 286.5 385.8 Q 271.6 395.3 255.8 403.4 Q 240.1 411.5 224.1 419.1 Q 208.1 426.7 193.7 437.0 Q 179.3 447.3 163.7 455.7 Q 148.1 464.0 132.5 472.4 Q 116.8 480.7 101.4 489.3 L 85.9 498.0" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:351;--dur:2101ms;--delay:690ms"/>
+    <path class="roots-path" d="M 340.9 382.6 Q 355.8 410.9 362.4 425.3 Q 369.1 439.8 373.3 455.2 Q 377.5 470.6 384.3 485.0 Q 391.1 499.4 400.3 512.4 Q 409.4 525.5 416.5 539.8 Q 423.5 554.1 432.3 567.4 L 441.1 580.7" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:246;--dur:1891ms;--delay:780ms"/>
+    <path class="roots-path" d="M 302.0 466.0 Q 276.3 486.8 263.7 497.4 Q 251.0 508.1 237.4 517.4 Q 223.8 526.8 210.8 536.9 Q 197.7 547.0 185.5 558.2 Q 173.4 569.3 163.6 582.7 Q 153.9 596.0 144.9 609.9 Q 135.9 623.7 129.2 638.8 L 122.4 653.9" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:291;--dur:1981ms;--delay:420ms"/>
+    <path class="roots-path" d="M 620.0 26.0 Q 584.7 55.5 568.0 71.4 Q 551.4 87.2 535.0 103.4 Q 518.6 119.5 500.6 133.9 Q 482.7 148.2 466.6 164.7 Q 450.5 181.1 437.4 200.0 Q 424.4 218.9 415.5 240.2 Q 406.6 261.4 396.5 282.1 Q 386.5 302.7 375.1 322.8 Q 363.8 342.8 352.3 362.7 Q 340.9 382.6 331.0 403.4 Q 321.0 424.1 311.5 445.1 Q 302.0 466.0 291.1 486.3 L 280.3 506.6" stroke="#b08d3e" stroke-width="2.4" stroke-linecap="round" opacity="0.55" style="--len:658;--dur:2716ms;--delay:90ms"/>
+    <path class="roots-path" d="M 620.4 71.7 Q 622.7 101.0 623.4 115.6 Q 624.0 130.3 622.2 144.9 Q 620.4 159.4 620.4 174.1 Q 620.3 188.8 622.8 203.2 Q 625.3 217.7 627.7 232.1 Q 630.2 246.6 632.2 261.1 Q 634.3 275.6 635.9 290.2 L 637.6 304.8" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:259;--dur:1916ms;--delay:600ms"/>
+    <path class="roots-path" d="M 293.4 380.2 Q 289.1 394.9 287.6 402.4 Q 286.2 409.9 284.2 417.3 L 282.2 424.7" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:51;--dur:1501ms;--delay:1530ms"/>
+    <path class="roots-path" d="M 362.5 287.0 Q 348.3 305.4 342.5 315.5 Q 336.7 325.6 329.5 334.7 Q 322.3 343.9 314.7 352.6 Q 307.1 361.4 300.3 370.8 L 293.4 380.2" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:128;--dur:1656ms;--delay:1200ms"/>
+    <path class="roots-path" d="M 530.7 212.7 Q 500.4 218.4 486.1 224.3 Q 471.9 230.2 458.1 237.0 Q 444.2 243.8 430.7 251.2 Q 417.2 258.6 403.7 266.1 Q 390.2 273.6 376.4 280.3 Q 362.5 287.0 348.4 293.3 Q 334.3 299.5 319.7 304.5 L 305.1 309.5" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:272;--dur:1943ms;--delay:420ms"/>
+    <path class="roots-path" d="M 509.6 249.0 Q 483.8 257.0 471.9 263.3 Q 459.9 269.6 448.3 276.4 Q 436.7 283.2 425.8 291.2 Q 415.0 299.3 404.7 308.0 Q 394.4 316.7 384.6 326.0 Q 374.9 335.3 363.9 343.1 L 352.9 350.9" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:208;--dur:1815ms;--delay:510ms"/>
+    <path class="roots-path" d="M 487.9 285.0 Q 459.2 296.0 445.0 301.7 Q 430.7 307.5 418.2 316.3 Q 405.6 325.2 394.3 335.6 Q 383.1 346.0 374.3 358.6 Q 365.5 371.3 355.9 383.3 Q 346.3 395.2 335.7 406.4 L 325.2 417.5" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:237;--dur:1873ms;--delay:600ms"/>
+    <path class="roots-path" d="M 336.1 444.9 Q 329.3 462.9 325.8 471.8 Q 322.2 480.8 320.6 490.2 Q 318.9 499.7 319.0 509.3 Q 319.2 518.9 318.9 528.5 L 318.6 538.1" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:106;--dur:1611ms;--delay:1110ms"/>
+    <path class="roots-path" d="M 472.5 324.0 Q 448.8 343.3 436.4 352.2 Q 424.1 361.2 412.0 370.5 Q 399.9 379.8 388.1 389.5 Q 376.3 399.1 367.0 411.2 Q 357.7 423.3 346.9 434.1 Q 336.1 444.9 323.8 453.9 L 311.5 462.9" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:235;--dur:1870ms;--delay:780ms"/>
+    <path class="roots-path" d="M 324.8 711.4 Q 305.7 712.4 296.1 711.8 Q 286.5 711.2 277.0 712.3 L 267.5 713.4" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:64;--dur:1527ms;--delay:1260ms"/>
+    <path class="roots-path" d="M 312.3 732.9 Q 314.3 748.8 315.6 756.8 Q 316.9 764.7 317.0 772.7 Q 317.1 780.8 317.8 788.8 L 318.6 796.8" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:71;--dur:1541ms;--delay:1350ms"/>
+    <path class="roots-path" d="M 378.9 660.6 Q 358.2 674.4 349.6 683.5 Q 341.1 692.5 332.9 701.9 Q 324.8 711.4 318.5 722.1 Q 312.3 732.9 307.6 744.5 Q 303.0 756.1 299.4 768.0 L 295.8 779.9" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:165;--dur:1729ms;--delay:1020ms"/>
+    <path class="roots-path" d="M 459.3 448.9 Q 441.9 476.5 434.4 491.0 Q 427.0 505.4 420.1 520.2 Q 413.2 535.0 409.6 550.9 Q 405.9 566.8 400.7 582.2 Q 395.5 597.6 390.5 613.2 Q 385.5 628.7 382.2 644.6 Q 378.9 660.6 377.5 676.8 Q 376.1 693.1 372.4 708.9 L 368.7 724.8" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:323;--dur:2045ms;--delay:690ms"/>
+    <path class="roots-path" d="M 408.2 604.0 Q 390.1 612.1 381.4 616.6 Q 372.6 621.2 363.4 625.0 Q 354.3 628.9 345.6 633.5 L 336.8 638.1" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:88;--dur:1574ms;--delay:1200ms"/>
+    <path class="roots-path" d="M 386.1 663.7 Q 395.2 681.7 398.7 691.2 Q 402.2 700.6 405.4 710.2 Q 408.6 719.8 411.2 729.6 L 413.7 739.4" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:89;--dur:1578ms;--delay:840ms"/>
+    <path class="roots-path" d="M 464.0 490.6 Q 455.2 521.3 448.9 535.9 Q 442.6 550.5 434.8 564.4 Q 427.1 578.3 417.6 591.2 Q 408.2 604.0 401.8 618.6 Q 395.4 633.2 390.8 648.4 Q 386.1 663.7 380.8 678.7 L 375.6 693.7" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:246;--dur:1891ms;--delay:510ms"/>
+    <path class="roots-path" d="M 634.0 32.0 Q 620.4 71.7 612.2 91.1 Q 604.0 110.4 592.7 128.1 Q 581.4 145.8 568.0 162.0 Q 554.7 178.3 542.7 195.5 Q 530.7 212.7 520.1 230.8 Q 509.6 249.0 498.7 267.0 Q 487.9 285.0 480.2 304.5 Q 472.5 324.0 468.3 344.6 Q 464.0 365.2 461.5 386.0 Q 459.0 406.9 459.1 427.9 Q 459.3 448.9 461.6 469.8 L 464.0 490.6" stroke="#b08d3e" stroke-width="2.4" stroke-linecap="round" opacity="0.55" style="--len:555;--dur:2509ms;--delay:180ms"/>
+    <path class="roots-path" d="M 715.7 160.3 Q 698.3 183.4 687.8 193.4 Q 677.3 203.4 667.4 214.0 Q 657.5 224.6 646.5 234.0 Q 635.5 243.4 624.1 252.4 Q 612.7 261.3 601.9 271.0 Q 591.1 280.7 579.2 288.9 Q 567.2 297.1 555.4 305.5 L 543.6 313.9" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:256;--dur:1910ms;--delay:690ms"/>
+    <path class="roots-path" d="M 884.7 319.1 Q 898.9 323.2 906.1 324.9 Q 913.3 326.5 920.6 327.1 L 928.0 327.8" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:49;--dur:1497ms;--delay:1620ms"/>
+    <path class="roots-path" d="M 850.9 270.1 Q 862.0 286.6 868.2 294.4 Q 874.4 302.1 879.6 310.6 Q 884.7 319.1 889.0 328.1 L 893.2 337.1" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:88;--dur:1575ms;--delay:840ms"/>
+    <path class="roots-path" d="M 886.7 342.5 Q 898.5 346.2 904.3 348.2 Q 910.2 350.1 915.6 353.0 L 921.0 356.0" stroke="#7a8466" stroke-width="0.75" stroke-linecap="round" opacity="0.32" style="--len:41;--dur:1481ms;--delay:1350ms"/>
+    <path class="roots-path" d="M 873.8 285.1 Q 877.8 304.3 879.4 314.0 Q 880.9 323.7 883.8 333.1 Q 886.7 342.5 889.5 351.9 L 892.3 361.3" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:87;--dur:1573ms;--delay:1020ms"/>
+    <path class="roots-path" d="M 898.4 297.0 Q 915.5 295.2 924.0 296.5 Q 932.5 297.7 941.1 298.2 Q 949.7 298.8 957.9 301.5 Q 966.0 304.1 974.5 305.9 L 982.9 307.6" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:95;--dur:1589ms;--delay:1110ms"/>
+    <path class="roots-path" d="M 750.3 227.6 Q 774.7 240.0 787.7 244.3 Q 800.6 248.7 813.4 253.5 Q 826.2 258.3 838.6 264.2 Q 850.9 270.1 862.3 277.6 Q 873.8 285.1 886.1 291.1 Q 898.4 297.0 909.6 304.9 L 920.7 312.8" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:211;--dur:1821ms;--delay:780ms"/>
+    <path class="roots-path" d="M 839.7 397.1 Q 861.1 399.3 871.8 399.1 Q 882.5 399.0 893.2 400.2 Q 903.9 401.5 914.0 404.9 Q 924.2 408.3 933.8 413.2 L 943.4 418.0" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:119;--dur:1636ms;--delay:840ms"/>
+    <path class="roots-path" d="M 859.4 418.6 Q 856.5 441.0 853.9 452.0 Q 851.2 462.9 849.3 474.1 Q 847.5 485.2 844.1 496.0 Q 840.8 506.8 836.3 517.2 L 831.8 527.5" stroke="#c9a854" stroke-width="1.1" stroke-linecap="round" opacity="0.4" style="--len:125;--dur:1648ms;--delay:930ms"/>
+    <path class="roots-path" d="M 779.5 297.7 Q 796.9 321.0 804.3 333.6 Q 811.6 346.2 817.7 359.4 Q 823.8 372.7 831.8 384.9 Q 839.7 397.1 849.5 407.8 Q 859.4 418.6 867.7 430.6 Q 876.0 442.6 884.3 454.5 L 892.7 466.4" stroke="#b08d3e" stroke-width="1.7" stroke-linecap="round" opacity="0.48" style="--len:225;--dur:1849ms;--delay:600ms"/>
+    <path class="roots-path" d="M 646.0 26.0 Q 665.7 58.5 676.0 74.5 Q 686.3 90.4 695.1 107.3 Q 703.8 124.2 709.8 142.2 Q 715.7 160.3 723.0 177.8 Q 730.3 195.3 740.3 211.5 Q 750.3 227.6 756.6 245.6 Q 762.8 263.5 771.2 280.6 Q 779.5 297.7 788.7 314.3 Q 797.9 330.9 807.3 347.4 Q 816.8 363.9 823.1 381.8 L 829.4 399.7" stroke="#b08d3e" stroke-width="2.4" stroke-linecap="round" opacity="0.55" style="--len:460;--dur:2320ms;--delay:270ms"/>
+    <circle class="roots-dot" cx="286.46" cy="145.76" r="2.67" fill="#b08d3e" style="--delay:2216ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="438.21" cy="407.91" r="2.32" fill="#b08d3e" style="--delay:2391ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="410.89" cy="369.46" r="2" fill="#b08d3e" style="--delay:2318ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="202.5" cy="239.52" r="1.89" fill="#b08d3e" style="--delay:2624ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="240.75" cy="349.74" r="2.81" fill="#b08d3e" style="--delay:2236ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="124.74" cy="425.91" r="1.87" fill="#b08d3e" style="--delay:2687ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="166.55" cy="581.56" r="1.82" fill="#b08d3e" style="--delay:2738ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="16.72" cy="566.33" r="3.09" fill="#b08d3e" style="--delay:2585ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="17.09" cy="656.76" r="2.73" fill="#8b3a4a" style="--delay:2642ms;--dot-o:0.65"/>
+    <circle class="roots-dot" cx="58.1" cy="621.36" r="2.83" fill="#b08d3e" style="--delay:2496ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="85.92" cy="497.96" r="2.69" fill="#b08d3e" style="--delay:2476ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="441.14" cy="580.67" r="2.99" fill="#b08d3e" style="--delay:2387ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="122.42" cy="653.87" r="2.97" fill="#b08d3e" style="--delay:2104ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="637.61" cy="304.79" r="2.43" fill="#b08d3e" style="--delay:2229ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="282.19" cy="424.71" r="3.04" fill="#b08d3e" style="--delay:2806ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="293.42" cy="380.2" r="2.52" fill="#8b3a4a" style="--delay:2607ms;--dot-o:0.65"/>
+    <circle class="roots-dot" cx="305.15" cy="309.49" r="2.62" fill="#b08d3e" style="--delay:2071ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="352.88" cy="350.88" r="2.2" fill="#b08d3e" style="--delay:2053ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="311.47" cy="462.88" r="2.58" fill="#b08d3e" style="--delay:2369ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="267.47" cy="713.41" r="1.87" fill="#b08d3e" style="--delay:2558ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="318.55" cy="796.75" r="2.11" fill="#b08d3e" style="--delay:2660ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="368.73" cy="724.82" r="2.82" fill="#b08d3e" style="--delay:2428ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="336.78" cy="638.09" r="3.2" fill="#b08d3e" style="--delay:2538ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="375.55" cy="693.73" r="1.94" fill="#b08d3e" style="--delay:2117ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="543.58" cy="313.92" r="2.09" fill="#b08d3e" style="--delay:2314ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="893.18" cy="337.06" r="2.94" fill="#b08d3e" style="--delay:2178ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="921.04" cy="355.98" r="2.49" fill="#b08d3e" style="--delay:2609ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="892.31" cy="361.28" r="2.59" fill="#b08d3e" style="--delay:2357ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="943.41" cy="417.97" r="2.24" fill="#b08d3e" style="--delay:2231ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="831.76" cy="527.52" r="3.02" fill="#b08d3e" style="--delay:2331ms;--dot-o:0.8"/>
+    <circle class="roots-dot" cx="892.69" cy="466.43" r="2.16" fill="#b08d3e" style="--delay:2171ms;--dot-o:0.8"/>
+    </svg>
+  </div>
+
+  <div class="hero-inner">
+    <div>
+      <p class="label enter" style="--d:0ms">Wijsheid van het vrouwenlichaam</p>
+      <h1>
+        <span class="enter" style="--d:60ms; display:inline-block">Jouw lichaam fluistert.</span><br>
+        <span class="enter" style="--d:180ms; display:inline-block">Ik leer je luisteren.</span>
+      </h1>
+      <hr class="divider">
+      <p class="quote enter" style="--d:380ms">De handleiding die je nooit hebt gekregen. <em>Over jezelf.</em></p>
+      <div class="cta-rij enter" style="--d:470ms">
+        <a class="btn btn-goud" href="https://calendly.com/kartihealth/kennismaking/?utm_source=website&amp;utm_medium=cta&amp;utm_campaign=matchcall&amp;utm_content=hero" target="_blank" rel="noopener noreferrer">Plan mijn match-call →</a>
+        <a class="btn btn-omlijnd" href="#methode">Lees hoe ik werk</a>
+      </div>
+      <p class="cta-sub enter" style="--d:550ms">15 minuten · vrijblijvend · eerlijk</p>
+      <p class="trust enter" style="--d:630ms">1:1 begeleiding door Nasra · HBO-verpleegkundige</p>
+    </div>
+
+    <div class="portret enter" style="--d:420ms">
+      <!-- vervang door lokaal pad indien gewenst -->
+      <img src="https://kartihealth.com/images/nasra-closeup.jpg" alt="Nasra, oprichter van Karti" loading="eager">
+    </div>
+  </div>
+</section>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js" } }
+</script>
+<script type="module">
+/* Optionele WebGL-diepte. Zelfde poortwachters als productie:
+   reduced-motion, save-data, weinig geheugen/cores, in-app browsers
+   en ontbrekend WebGL2 krijgen alleen de (volwaardige) SVG. */
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const inApp = /instagram|fban|fbav|fb_iab|tiktok|musical_ly|bytedance|snapchat|pinterest|line\//i.test(navigator.userAgent);
+const zwak = (navigator.deviceMemory ?? 8) < 4 || (navigator.hardwareConcurrency ?? 8) < 4 || navigator.connection?.saveData;
+const test = document.createElement("canvas").getContext("webgl2", { failIfMajorPerformanceCaveat: true });
+
+if (!reduced && !inApp && !zwak && test) {
+  test.getExtension("WEBGL_lose_context")?.loseContext();
+  const start = () => import("three").then(initScene).catch(() => {});
+  "requestIdleCallback" in window ? requestIdleCallback(start, { timeout: 2500 }) : setTimeout(start, 1400);
+}
+
+function initScene(THREE) {
+  const houder = document.querySelector(".roots");
+  const svg = document.getElementById("roots-svg");
+
+  // geometrie rechtstreeks uit de SVG lezen → één bron van waarheid
+  const paden = [...svg.querySelectorAll(".roots-path")];
+  const dots = [...svg.querySelectorAll(".roots-dot")];
+
+  const scene = new THREE.Scene();
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true, powerPreference: "low-power" });
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 1.75));
+  const cam = new THREE.OrthographicCamera(0, 1, 1, 0, .1, 100);
+  cam.position.z = 10;
+
+  const groep = new THREE.Group();
+  scene.add(groep);
+  const S = 1 / 95, sx = x => (x - 500) * S, sy = y => (300 - y) * S;
+
+  const lijnen = paden.map(p => {
+    const len = p.getTotalLength();
+    const n = Math.max(12, Math.round(len / 14));
+    const pts = [];
+    for (let i = 0; i <= n; i++) {
+      const q = p.getPointAtLength((i / n) * len);
+      pts.push(new THREE.Vector3(sx(q.x), sy(q.y), (Math.sin(p.getAttribute("d").length + i) * .3)));
+    }
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    const mat = new THREE.LineBasicMaterial({
+      color: new THREE.Color(p.getAttribute("stroke")),
+      transparent: true,
+      opacity: parseFloat(p.getAttribute("opacity")) + .08,
+    });
+    const lijn = new THREE.Line(geo, mat);
+    lijn.userData = {
+      totaal: n + 1,
+      delay: parseFloat(p.style.getPropertyValue("--delay")) / 1000,
+      dur: parseFloat(p.style.getPropertyValue("--dur")) / 1000,
+    };
+    lijn.geometry.setDrawRange(0, 0);
+    groep.add(lijn);
+    return lijn;
+  });
+
+  const dotGeo = new THREE.BufferGeometry();
+  dotGeo.setAttribute("position", new THREE.Float32BufferAttribute(
+    dots.flatMap(d => [sx(+d.getAttribute("cx")), sy(+d.getAttribute("cy")), 0]), 3));
+  const dotCanvas = document.createElement("canvas");
+  dotCanvas.width = dotCanvas.height = 64;
+  const dctx = dotCanvas.getContext("2d");
+  dctx.beginPath(); dctx.arc(32, 32, 28, 0, Math.PI * 2); dctx.fillStyle = "#fff"; dctx.fill();
+  const dotMat = new THREE.PointsMaterial({
+    color: 0xb08d3e, size: 4.5, sizeAttenuation: false, transparent: true, opacity: 0,
+    map: new THREE.CanvasTexture(dotCanvas), alphaTest: .4, depthWrite: false,
+  });
+  groep.add(new THREE.Points(dotGeo, dotMat));
+
+  function maat() {
+    const r = houder.getBoundingClientRect();
+    renderer.setSize(r.width, r.height);
+    const zoom = r.height / (600 * S);
+    const halfB = r.width / 2 / zoom, halfH = r.height / 2 / zoom;
+    cam.left = -halfB; cam.right = halfB; cam.top = halfH; cam.bottom = -halfH;
+    cam.updateProjectionMatrix();
+    groep.position.y = halfH - sy(0);
+  }
+  maat();
+  addEventListener("resize", maat, { passive: true });
+  houder.appendChild(renderer.domElement);
+
+  let doelRX = 0, doelRY = 0;
+  addEventListener("mousemove", e => {
+    doelRY = (e.clientX / innerWidth * 2 - 1) * .055;
+    doelRX = -(e.clientY / innerHeight * 2 - 1) * .03;
+  }, { passive: true });
+
+  const klok = new THREE.Clock();
+  let eerste = true;
+  renderer.setAnimationLoop(() => {
+    const t = klok.getElapsedTime();
+    for (const l of lijnen) {
+      const { totaal, delay, dur } = l.userData;
+      const k = Math.min(1, Math.max(0, (t - delay) / dur));
+      l.geometry.setDrawRange(0, Math.round(totaal * (1 - Math.pow(1 - k, 3))));
+    }
+    dotMat.opacity = Math.min(1, Math.max(0, (t - 2.6) / 1.2)) * .85;
+    groep.rotation.y += (doelRY - groep.rotation.y) * .03;
+    groep.rotation.x += (doelRX - groep.rotation.x) * .03;
+    renderer.render(scene, cam);
+    if (eerste) { eerste = false; requestAnimationFrame(() => svg.classList.add("gl-active")); }
+  });
+}
+</script>
+
+</body>
+</html>

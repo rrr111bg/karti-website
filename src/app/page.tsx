@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import {
   MenuIcon,
+  CloseIcon,
   ArrowRight,
   InstagramIcon,
   EmailIcon,
@@ -18,12 +19,17 @@ import {
   CycleSpiralIcon,
   UpDownArrowsIcon,
   SineWaveIcon,
+  AwarenessIcon,
+  PathwayIcon,
+  BalanceIcon,
+  SeasonsIcon,
 } from "@/components/icons";
 import {
-  CALENDLY_URL,
+  calendlyUrl,
   NAV_LINKS,
   HERO,
   HERKENNING,
+  METHODIEK,
   BOUWSTENEN,
   NASRA,
   TRAJECTEN,
@@ -34,44 +40,133 @@ import {
   FOOTER,
 } from "@/lib/content";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { RootsVisual } from "@/components/karti/RootsVisual";
+import { StickyMatchCall } from "@/components/karti/StickyMatchCall";
+import { TiltCard } from "@/components/karti/TiltCard";
+
+/* Plausible tagged-event: elke klik op een match-call CTA wordt als
+   conversie-event gemeten, met UTM-content per plek (zie calendlyUrl). */
+const EVENT_MATCHCALL = "plausible-event-name=matchcall-click";
 
 /* ─────────────── Header ─────────────── */
 function Header() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  // scroll-lock terwijl het menu open is
+  useEffect(() => {
+    document.documentElement.style.overflow = menuOpen ? "hidden" : "";
+    return () => {
+      document.documentElement.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
   return (
+    <>
     <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
-      <div className="container-wide flex items-center justify-between py-5">
+      <div className="container-wide flex items-center justify-between py-4 lg:py-5">
         <Link href="/" className="t0-wordmark text-[#3d3228]">
           K A R T I
         </Link>
         <nav className="hidden lg:flex items-center gap-10 t6-label text-[#3d3228]">
           {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-[#b08d3e] transition-colors">
+            <a key={l.href} href={l.href} className="hover:text-[#80662c] transition-colors">
               {l.label}
             </a>
           ))}
         </nav>
-        <div className="flex items-center gap-4">
-          <a href="#nieuwsbrief" className="hidden md:inline-flex btn-primary">
-            Nieuwsbrief
+        <div className="flex items-center gap-3">
+          <a
+            href={calendlyUrl("header")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`btn-primary btn-header ${EVENT_MATCHCALL}`}
+          >
+            <span className="sm:hidden">Match-call</span>
+            <span className="hidden sm:inline">{HERO.primaryCta}</span>
           </a>
-          <button className="lg:hidden text-[#3d3228]" aria-label="Menu">
+          <button
+            type="button"
+            className="lg:hidden text-[#3d3228] p-2 -mr-2"
+            aria-label="Menu openen"
+            aria-expanded={menuOpen}
+            aria-controls="mobiel-menu"
+            onClick={() => setMenuOpen(true)}
+          >
             <MenuIcon className="w-6 h-6" />
           </button>
         </div>
       </div>
     </header>
+
+      {/* Buiten de <header>: backdrop-filter maakt de header anders het
+          containing block voor deze fixed overlay */}
+      {menuOpen && (
+        <div
+          id="mobiel-menu"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Navigatie"
+          className="fixed inset-0 z-50 night-bloom flex flex-col"
+        >
+          <div className="velvet-texture" />
+          <div className="container-wide relative flex items-center justify-between py-4">
+            <span className="t0-wordmark text-[#fbf7f3]">K A R T I</span>
+            <button
+              type="button"
+              autoFocus
+              aria-label="Menu sluiten"
+              onClick={() => setMenuOpen(false)}
+              className="text-[#e2cda0] p-2 -mr-2"
+            >
+              <CloseIcon className="w-6 h-6" />
+            </button>
+          </div>
+          <nav className="relative flex-1 flex flex-col items-center justify-center gap-8">
+            {NAV_LINKS.map((l) => (
+              <a
+                key={l.href}
+                href={l.href}
+                onClick={() => setMenuOpen(false)}
+                className="font-[family-name:var(--font-heading)] text-[#fbf7f3] text-[28px] hover:text-[#e2cda0] transition-colors"
+              >
+                {l.label}
+              </a>
+            ))}
+            <a
+              href={calendlyUrl("menu")}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => setMenuOpen(false)}
+              className={`btn-primary-lg mt-6 ${EVENT_MATCHCALL}`}
+            >
+              {HERO.primaryCta}
+            </a>
+          </nav>
+          <div className="relative pb-10 text-center t6-label text-[#e2cda0]">
+            {HERO.ctaSub}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
-/* ─────────────── Split Hero ─────────────── */
-function SplitHero() {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    // next-tick so the initial class applies, then toggle reveal
-    const id = window.requestAnimationFrame(() => setMounted(true));
-    return () => window.cancelAnimationFrame(id);
-  }, []);
-
+/* ─────────────── Hero: het gewortelde portret (Dawn) ───────────────
+   Concept B uit de designrichting: een organisch groeiend wortelsysteem
+   in goud op Sandstone. SVG-basis voor iedereen (ook in-app browsers,
+   ook zonder JS), WebGL-diepte alleen op apparaten die het aankunnen.
+   Mobiel staat de volledige waardepropositie plus match-call CTA boven
+   de vouw; het portret wortelt direct daaronder in het stelsel. */
+function Hero() {
   // Split pull quote: main text in bark, "Over jezelf." in deep rose
   const pull = HERO.pullQuote;
   const accent = "Over jezelf.";
@@ -79,80 +174,174 @@ function SplitHero() {
     ? pull.slice(0, pull.length - accent.length)
     : pull;
 
-  const revealClass = `hero-reveal-item${mounted ? " hero-reveal-in" : ""}`;
-  const revealStyle = (delay: number) => ({ transitionDelay: `${delay}ms` });
+  const enter = (delay: number) =>
+    ({ "--enter-delay": `${delay}ms` } as CSSProperties);
 
   return (
-    <section className="relative grid grid-cols-1 lg:grid-cols-2 min-h-[85vh]">
-      {/* Left: Night Bloom portrait panel */}
-      <div className="night-bloom relative flex items-end min-h-[520px] lg:min-h-0 p-10 lg:p-14">
-        {/* Nasra hero portrait — file: /public/images/nasra-hero.jpg */}
-        <Image
-          src="/images/nasra-hero.jpg"
-          alt="Nasra"
-          fill
-          priority
-          sizes="(max-width: 1024px) 100vw, 50vw"
-          className="object-cover object-[center_45%]"
-        />
-        {/* Dark overlay voor leesbaarheid van de gold label — licht gehouden voor de editorial foto */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(180deg, rgba(26,22,20,0.15) 0%, rgba(26,22,20,0) 35%, rgba(26,22,20,0) 65%, rgba(26,22,20,0.55) 100%)",
-          }}
-        />
-        <div className="velvet-texture" />
-        {/* Fine gold circle frame */}
-        <GoldCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-[55%] w-[min(70vh,520px)] h-[min(70vh,520px)] text-[#c9a854] opacity-40" />
-        {/* Bottom label only (no wordmark here, header has it) */}
-        <div
-          className={`relative z-10 t6-label text-[#e2cda0] hero-reveal-item${
-            mounted ? " hero-reveal-in" : ""
-          }`}
-          style={{ transitionDelay: "600ms" }}
-        >
-          {HERO.label}
-        </div>
-        <div className="absolute bottom-10 right-10 gold-dots-cluster">
-          <span />
-          <span />
-          <span />
-        </div>
-      </div>
+    <section className="relative overflow-hidden bg-[#f2eae0]">
+      {/* Wortelsysteem: groeit vanuit de grond onder het portret */}
+      <RootsVisual className="absolute inset-x-0 bottom-0 h-[46%] sm:h-[52%] lg:h-[68%]" />
+      <ArchitecturalArcIcon
+        aria-hidden
+        className="absolute -right-28 -top-40 w-[560px] h-[560px] text-[#c9a854] opacity-[0.07]"
+      />
 
-      {/* Right: Dawn content panel */}
-      <div className="relative bg-[#f2eae0] flex items-center px-8 lg:px-20 py-20 lg:py-0 overflow-hidden">
-        <ArchitecturalArcIcon className="absolute -right-24 -bottom-24 w-[520px] h-[520px] text-[#c9a854] opacity-[0.06]" />
-        <div className="relative max-w-[620px]">
-          <h1 className="t1-hero text-[#3d3228]">
-            <span className={revealClass} style={revealStyle(0)}>
+      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
+        {/* Content: waardepropositie + CTA, mobiel als eerste in beeld */}
+        <div className="max-w-[660px]">
+          <div className="t6-label text-[#80662c] mb-6 hero-enter-item" style={enter(0)}>
+            {HERO.label}
+          </div>
+          <h1 className="t1-hero text-[#3d3228]" style={{ fontSize: "clamp(34px, 8.4vw, 68px)" }}>
+            <span className="hero-enter-item inline-block" style={enter(60)}>
               {HERO.headline[0]}
             </span>
             <br />
-            <span className={revealClass} style={revealStyle(120)}>
+            <span className="hero-enter-item inline-block" style={enter(180)}>
               {HERO.headline[1]}
             </span>
           </h1>
-          <hr
-            className={`gold-divider-animated my-8${mounted ? " in" : ""}`}
-            style={{ transitionDelay: "260ms" }}
-          />
-          <p
-            className={`t3-quote text-[#3d3228] mb-12 ${revealClass}`}
-            style={revealStyle(380)}
-          >
+          <hr className="gold-divider gold-divider-enter my-7" style={enter(300)} />
+          <p className="t3-quote text-[#3d3228] mb-9 hero-enter-item" style={enter(380)}>
             {pullHead}
             <span style={{ color: "#8b3a4a" }}>{accent}</span>
           </p>
-          <a
-            href="#bouwstenen"
-            className={`btn-outline-gold inline-flex items-center gap-2 text-[15px] ${revealClass}`}
-            style={{ padding: "18px 38px", ...revealStyle(520) }}
+          <div
+            className="flex flex-col sm:flex-row sm:items-center gap-4 hero-enter-item"
+            style={enter(470)}
           >
-            {HERO.secondaryCta} <ArrowRight className="w-4 h-4" />
-          </a>
+            <a
+              href={calendlyUrl("hero")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`btn-primary-lg ${EVENT_MATCHCALL}`}
+            >
+              {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
+            </a>
+            <a href="#methode" className="btn-outline-gold">
+              {HERO.secondaryCta}
+            </a>
+          </div>
+          <div className="t6-label text-[#6e6557] mt-5 hero-enter-item" style={enter(550)}>
+            {HERO.ctaSub}
+          </div>
+          <div className="flex items-center gap-3 mt-9 hero-enter-item" style={enter(630)}>
+            <span className="gold-dot" aria-hidden />
+            <span className="t4-body text-[#2e2622]" style={{ fontSize: "15px" }}>
+              {HERO.trustLine}
+            </span>
+          </div>
+        </div>
+
+        {/* Portret in fine-line ringen, geworteld in het stelsel */}
+        <div
+          className="relative flex justify-center lg:justify-end hero-enter-item"
+          style={enter(420)}
+        >
+          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[400px] lg:h-[400px]">
+            <div
+              aria-hidden
+              className="absolute -inset-5 rounded-full border border-[#c9a854]/40"
+            />
+            <div
+              aria-hidden
+              className="hidden lg:block absolute -inset-10 rounded-full border border-[#c9a854]/20"
+            />
+            <div className="relative w-full h-full rounded-full overflow-hidden border border-[#b08d3e]/60 bg-[#faf6f0]">
+              <Image
+                src="/images/nasra-closeup.jpg"
+                alt="Nasra, oprichter van Karti"
+                fill
+                priority
+                sizes="(max-width: 1024px) 250px, 400px"
+                className="object-cover scale-[1.04]"
+              />
+            </div>
+            <div className="absolute -bottom-2 -left-7 gold-dots-cluster" aria-hidden>
+              <span />
+              <span />
+              <span />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────── De Karti Methode: 4 pijlers in vaste volgorde ─────────────── */
+const METHODIEK_ICONS = [AwarenessIcon, PathwayIcon, BalanceIcon, SeasonsIcon];
+
+function Methodiek() {
+  const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.15 });
+  return (
+    <section id="methode" className="relative bg-[#faf6f0] py-28 lg:py-36 overflow-hidden">
+      <GoldCircleIcon
+        aria-hidden
+        className="absolute -left-44 top-20 w-[440px] h-[440px] text-[#c9a854] opacity-[0.07]"
+      />
+      <div className="container-wide relative">
+        <div className="text-center mb-16 lg:mb-20 max-w-[760px] mx-auto">
+          <div className="t6-label text-[#80662c] mb-5">{METHODIEK.label}</div>
+          <h2 className="t2-section mb-7">{METHODIEK.headline}</h2>
+          <hr className="gold-divider mx-auto mb-7" />
+          <p className="t4-body text-[#2e2622]">{METHODIEK.intro}</p>
+        </div>
+
+        <div ref={ref} className="relative">
+          {/* Het pad door de vier pijlers: de volgorde is de methode */}
+          <div
+            aria-hidden
+            className="hidden lg:block absolute top-[23px] left-[6%] right-[6%] h-px bg-gradient-to-r from-[#b08d3e]/0 via-[#b08d3e]/45 to-[#b08d3e]/0"
+          />
+          <div
+            aria-hidden
+            className="lg:hidden absolute top-3 bottom-3 left-[23px] w-px bg-gradient-to-b from-[#b08d3e]/0 via-[#b08d3e]/40 to-[#b08d3e]/0"
+          />
+          <ol className="grid grid-cols-1 lg:grid-cols-4 gap-12 lg:gap-10">
+            {METHODIEK.pijlers.map((p, i) => {
+              const Icon = METHODIEK_ICONS[i];
+              return (
+                <li
+                  key={p.index}
+                  className={`scroll-reveal-init relative flex lg:block gap-6 ${
+                    inView ? "scroll-reveal-in" : ""
+                  }`}
+                  style={{ transitionDelay: `${i * 140}ms` }}
+                >
+                  <div className="relative flex-shrink-0 w-[46px] h-[46px] lg:mb-6 rounded-full border border-[#b08d3e]/50 bg-[#faf6f0] flex items-center justify-center">
+                    <Icon className="w-6 h-6 text-[#80662c]" />
+                  </div>
+                  <div>
+                    <div
+                      className="font-[family-name:var(--font-wordmark)] text-[#80662c] mb-2"
+                      style={{ fontSize: "20px", letterSpacing: "0.18em", lineHeight: 1 }}
+                    >
+                      {p.index}
+                    </div>
+                    <h3
+                      className="font-[family-name:var(--font-heading)] font-bold text-[#3d3228] mb-3"
+                      style={{ fontSize: "clamp(20px, 1.6vw, 24px)", lineHeight: 1.2 }}
+                    >
+                      {p.title}
+                    </h3>
+                    <p className="t4-body text-[#2e2622]" style={{ fontSize: "16px", lineHeight: 1.6 }}>
+                      {p.body}
+                    </p>
+                  </div>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+
+        <div className="mt-16 lg:mt-20 text-center max-w-[640px] mx-auto">
+          <p
+            className="font-[family-name:var(--font-heading)] italic"
+            style={{ fontSize: "clamp(20px, 2vw, 28px)", color: "#8b3a4a", lineHeight: 1.45 }}
+          >
+            {METHODIEK.closing}
+          </p>
         </div>
       </div>
     </section>
@@ -312,7 +501,7 @@ function OverNasra() {
       <div className="container-wide">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div>
-            <div className="t6-label text-[#b08d3e] mb-5">{NASRA.label}</div>
+            <div className="t6-label text-[#80662c] mb-5">{NASRA.label}</div>
             <hr className="gold-divider mb-8" />
             <h2 className="t2-section mb-8">{NASRA.headline}</h2>
             {NASRA.body.map((p, i) => (
@@ -331,10 +520,10 @@ function OverNasra() {
               {NASRA.deepRoseQuote}
             </p>
             <a
-              href={CALENDLY_URL}
+              href={calendlyUrl("nasra")}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-ghost-link inline-flex items-center gap-1"
+              className={`btn-ghost-link inline-flex items-center gap-1 ${EVENT_MATCHCALL}`}
             >
               {NASRA.secondaryCta} <ArrowRight className="w-4 h-4" />
             </a>
@@ -394,9 +583,9 @@ function DeTrajecten() {
           {TRAJECTEN.cards.map((card) => {
             const featured = card.featured;
             return (
+              <TiltCard key={card.name} className="flex">
               <div
-                key={card.name}
-                className={`relative flex flex-col p-10 card-lift ${
+                className={`relative flex flex-col w-full p-10 card-lift ${
                   featured
                     ? "night-bloom border border-[#b08d3e] lg:-mt-6 lg:mb-0 card-lift-featured"
                     : "bg-[#faf6f0] border border-[#b08d3e]/30"
@@ -406,7 +595,7 @@ function DeTrajecten() {
                 <div className="relative flex-1 flex flex-col">
                   <div
                     className={`t6-label mb-4 ${
-                      featured ? "text-[#e2cda0]" : "text-[#b08d3e]"
+                      featured ? "text-[#e2cda0]" : "text-[#80662c]"
                     }`}
                   >
                     {card.tier}
@@ -425,7 +614,7 @@ function DeTrajecten() {
                     className="font-[family-name:var(--font-heading)] italic mb-5"
                     style={{
                       fontSize: "22px",
-                      color: featured ? "#e2cda0" : "#b08d3e",
+                      color: featured ? "#e2cda0" : "#80662c",
                     }}
                   >
                     {card.price}
@@ -464,17 +653,18 @@ function DeTrajecten() {
                   </ul>
                 </div>
               </div>
+              </TiltCard>
             );
           })}
         </div>
         <div className="mt-20 text-center max-w-[720px] mx-auto">
           <p className="t3-quote text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>
-          <p className="t4-body text-[#8a8070] mb-12">{TRAJECTEN.closingBody}</p>
+          <p className="t4-body text-[#6e6557] mb-12">{TRAJECTEN.closingBody}</p>
           <a
-            href={CALENDLY_URL}
+            href={calendlyUrl("trajecten")}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary-lg"
+            className={`btn-primary-lg ${EVENT_MATCHCALL}`}
           >
             {TRAJECTEN.finalCta}
           </a>
@@ -681,7 +871,7 @@ function Nieuwsbrief() {
     <section id="nieuwsbrief" className="py-24 lg:py-32">
       <div className="container-narrow">
         <div className="bg-[#faf6f0] border border-[#b08d3e]/40 px-8 md:px-14 py-14 text-center max-w-[640px] mx-auto">
-          <div className="t6-label text-[#b08d3e] mb-4">{NEWSLETTER.label}</div>
+          <div className="t6-label text-[#80662c] mb-4">{NEWSLETTER.label}</div>
           <p
             className="font-[family-name:var(--font-heading)] italic mb-4"
             style={{ fontSize: "clamp(24px, 2.2vw, 30px)", color: "#3d3228" }}
@@ -726,47 +916,35 @@ function Nieuwsbrief() {
   );
 }
 
-/* ─────────────── Instagram Feed ─────────────── */
-function InstagramFeed() {
+/* ─────────────── Instagram (magnetische volg-band) ───────────────
+   Bewust geen nep-tegels: één eerlijke, premium uitnodiging. */
+function InstagramBand() {
   return (
-    <section className="py-24 lg:py-32">
-      <div className="container-wide">
-        <div className="text-center mb-10">
-          <div className="t6-label text-[#b08d3e] mb-4">{INSTAGRAM.label}</div>
-          <p
-            className="font-[family-name:var(--font-heading)] italic"
-            style={{ fontSize: "clamp(22px, 2vw, 28px)", color: "#3d3228" }}
-          >
-            {INSTAGRAM.headline}
-          </p>
-        </div>
-        <div className="flex gap-5 overflow-x-auto no-scrollbar pb-4 -mx-5 px-5">
-          {Array.from({ length: 8 }).map((_, i) => (
+    <section className="py-24 lg:py-28">
+      <div className="container-narrow">
+        <div className="relative night-bloom px-8 md:px-14 py-14 md:py-16 text-center overflow-hidden">
+          <div className="velvet-texture" />
+          <GoldCircleIcon
+            aria-hidden
+            className="absolute -right-16 -bottom-24 w-[280px] h-[280px] text-[#c9a854] opacity-20"
+          />
+          <div className="relative">
+            <div className="t6-label text-[#e2cda0] mb-4">{INSTAGRAM.label}</div>
+            <p
+              className="font-[family-name:var(--font-heading)] italic text-[#fbf7f3] mb-8"
+              style={{ fontSize: "clamp(24px, 2.4vw, 32px)" }}
+            >
+              {INSTAGRAM.headline}
+            </p>
             <a
-              key={i}
               href={INSTAGRAM.link}
               target="_blank"
               rel="noopener noreferrer"
-              className="relative flex-shrink-0 w-[240px] h-[360px] night-bloom border border-[#c9a854]/30 hover:border-[#c9a854]/70 transition-colors"
+              className="btn-outline-gold-light"
             >
-              <div className="velvet-texture" />
-              <div className="absolute inset-0 flex flex-col justify-between p-6">
-                <InstagramIcon className="w-5 h-5 text-[#e2cda0]" />
-                <div className="t6-label text-[#e2cda0]">{INSTAGRAM.handle}</div>
-              </div>
-              <GoldCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 text-[#c9a854] opacity-30" />
+              <InstagramIcon className="w-4 h-4" /> Volg @kartihealth
             </a>
-          ))}
-        </div>
-        <div className="text-center mt-8">
-          <a
-            href={INSTAGRAM.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-ghost-link inline-flex items-center gap-1"
-          >
-            {INSTAGRAM.linkLabel} <ArrowRight className="w-4 h-4" />
-          </a>
+          </div>
         </div>
       </div>
     </section>
@@ -798,10 +976,10 @@ function MatchCall() {
         ))}
         <div className="mt-12 mb-5 flex justify-center">
           <a
-            href={CALENDLY_URL}
+            href={calendlyUrl("final")}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn-primary-lg"
+            className={`btn-primary-lg ${EVENT_MATCHCALL}`}
           >
             {MATCHCALL.cta}
           </a>
@@ -827,16 +1005,17 @@ function MatchCall() {
 function Footer() {
   return (
     <footer className="bg-[#f2eae0] border-t border-[#b08d3e]/30">
-      <div className="container-wide py-16">
+      {/* extra bodemruimte op mobiel voor de sticky match-call balk */}
+      <div className="container-wide pt-16 pb-32 md:pb-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           <div>
             <Link href="/" className="t0-wordmark text-[#3d3228] block mb-4">
               K A R T I
             </Link>
-            <div className="t6-label text-[#b08d3e]">{FOOTER.tagline}</div>
+            <div className="t6-label text-[#80662c]">{FOOTER.tagline}</div>
           </div>
           <nav className="flex flex-col gap-2">
-            <div className="t6-label text-[#b08d3e] mb-2">NAVIGATIE</div>
+            <div className="t6-label text-[#80662c] mb-2">NAVIGATIE</div>
             {FOOTER.links.map((l) => (
               <a
                 key={l.href}
@@ -848,7 +1027,7 @@ function Footer() {
             ))}
           </nav>
           <div className="flex flex-col gap-2">
-            <div className="t6-label text-[#b08d3e] mb-2">CONTACT</div>
+            <div className="t6-label text-[#80662c] mb-2">CONTACT</div>
             <a
               href={`https://${FOOTER.contact.instagram}`}
               target="_blank"
@@ -866,7 +1045,7 @@ function Footer() {
           </div>
         </div>
         <hr className="gold-divider mt-14 mb-6" style={{ width: "100%", opacity: 0.3 }} />
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-[#8a8070]">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-[#6e6557]">
           <span>{FOOTER.legal}</span>
           <div className="gold-dots-cluster">
             <span />
@@ -885,17 +1064,19 @@ export default function Page() {
     <>
       <Header />
       <main>
-        <SplitHero />
+        <Hero />
         <Herkenning />
+        <Methodiek />
         <DeBouwstenen />
         <OverNasra />
         <DeTrajecten />
         <Testimonials />
         <Nieuwsbrief />
-        <InstagramFeed />
+        <InstagramBand />
         <MatchCall />
       </main>
       <Footer />
+      <StickyMatchCall />
     </>
   );
 }
