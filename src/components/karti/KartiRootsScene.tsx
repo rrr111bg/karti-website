@@ -139,10 +139,10 @@ function TipDots() {
   );
 }
 
-/** Trage parallax op muis en scroll — window-level, canvas blijft pointer-events:none. */
+/** Trage rotatie-parallax op de muis — window-level, canvas blijft pointer-events:none. */
 function ParallaxGroup({ children }: { children: React.ReactNode }) {
   const ref = useRef<THREE.Group>(null);
-  const target = useRef({ rx: 0, ry: 0, ty: 0 });
+  const target = useRef({ rx: 0, ry: 0 });
 
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
@@ -151,15 +151,8 @@ function ParallaxGroup({ children }: { children: React.ReactNode }) {
       target.current.ry = nx * 0.055;
       target.current.rx = -ny * 0.03;
     };
-    const onScroll = () => {
-      target.current.ty = Math.min(window.scrollY, 900) * 0.00035;
-    };
     window.addEventListener("mousemove", onMove, { passive: true });
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      window.removeEventListener("scroll", onScroll);
-    };
+    return () => window.removeEventListener("mousemove", onMove);
   }, []);
 
   useFrame(({ clock }) => {
@@ -167,12 +160,60 @@ function ParallaxGroup({ children }: { children: React.ReactNode }) {
     if (!g) return;
     g.rotation.y += (target.current.ry - g.rotation.y) * 0.03;
     g.rotation.x += (target.current.rx - g.rotation.x) * 0.03;
-    g.position.y += (target.current.ty - g.position.y) * 0.05;
     // nauwelijks waarneembare ademing
     g.rotation.z = Math.sin(clock.getElapsedTime() * 0.07) * 0.004;
   });
 
   return <group ref={ref}>{children}</group>;
+}
+
+/**
+ * Botanische gelaagde diepte ("Luxury Botanical"/"Layered Depth"):
+ * takken per diepte in een eigen groep met eigen scroll-snelheid,
+ * zodat diepere vertakkingen trager meebewegen dan de hoofdtakken.
+ */
+const DEPTH_SCROLL_FACTORS = [0.00022, 0.00034, 0.00048, 0.00062] as const;
+
+function DepthLayers() {
+  const refs = useRef<(THREE.Group | null)[]>([null, null, null, null]);
+  const scrollY = useRef(0);
+
+  useEffect(() => {
+    const onScroll = () => {
+      scrollY.current = Math.min(window.scrollY, 900);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useFrame(() => {
+    refs.current.forEach((g, d) => {
+      if (!g) return;
+      const doel = scrollY.current * DEPTH_SCROLL_FACTORS[d];
+      g.position.y += (doel - g.position.y) * 0.05;
+    });
+  });
+
+  return (
+    <>
+      {[0, 1, 2, 3].map((d) => (
+        <group
+          key={d}
+          ref={(el) => {
+            refs.current[d] = el;
+          }}
+        >
+          {ROOT_BRANCHES.filter((b) => Math.min(b.depth, 3) === d).map(
+            (b) => (
+              <GrowingBranch key={b.id} b={b} />
+            )
+          )}
+          {d === 2 && <TipDots />}
+        </group>
+      ))}
+    </>
+  );
 }
 
 /** Camera-zoom declaratief afgestemd op containerhoogte: compositie spiegelt de SVG. */
@@ -203,10 +244,7 @@ export default function KartiRootsScene({ onReady }: SceneProps) {
     >
       <SceneCamera />
       <ParallaxGroup>
-        {ROOT_BRANCHES.map((b) => (
-          <GrowingBranch key={b.id} b={b} />
-        ))}
-        <TipDots />
+        <DepthLayers />
       </ParallaxGroup>
     </Canvas>
   );

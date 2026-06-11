@@ -56,7 +56,7 @@ export const MATCHCALL_PAGE = {
     "Past het? Dan hoor je hoe een traject eruit zou zien",
   ],
   watNiet:
-    "Geen script, geen druk om te beslissen. Past het niet, dan zegt Nasra dat gewoon en denkt ze mee over wat wel bij je past.",
+    "Geen script, geen druk om te beslissen. Past het niet, dan zegt Nasra dat gewoon en denkt ze mee over wat wel bij je past.",
   agendaLabel: "KIES EEN MOMENT",
   fallbackText: "Opent de agenda hieronder niet?",
   fallbackCta: "Open de agenda direct",
@@ -121,7 +121,7 @@ export const HERKENNING = {
     "De stemmingswisselingen waarvan je denkt: dit ben ik toch niet?",
     "De pijn die je elke maand accepteert alsof het normaal is",
   ],
-  body: "Je zoekt hulp, maar krijgt de pil als oplossing of de boodschap dat het erbij hoort.",
+  body: "Je zoekt hulp, maar krijgt de pil als oplossing of de boodschap dat het erbij hoort.",
   deepRoseQuote: "Het hoort er niet bij!",
 } as const;
 
@@ -254,7 +254,7 @@ export const TRAJECTEN = {
   ],
   investeringLabel: "INVESTERING",
   closingQuote:
-    "Dit is niet voor vrouwen op zoek naar een magic pill. Dit is voor vrouwen die bereid zijn zichzelf te ontmoeten.",
+    "Dit is niet voor vrouwen op zoek naar een magic pill. Dit is voor vrouwen die bereid zijn zichzelf te ontmoeten.",
   closingBody:
     "Na drie maanden begrijp je waarom je reageert zoals je reageert. Je hebt een systeem dat werkt. Voor de rest van je leven.",
   finalCta: "Plan mijn gratis match-call",
@@ -373,7 +373,7 @@ export const MATCHCALL = {
   derisk: [
     "Je spreekt Nasra zelf, vijftien minuten, gratis.",
     "Geen script en geen verplichting. Jullie kijken alleen of het past.",
-    "Past het niet, dan hoor je dat gewoon, met een eerlijke gedachte over wat wel bij je past.",
+    "Past het niet, dan hoor je dat gewoon, met een eerlijke gedachte over wat wel bij je past.",
   ],
   cta: "Plan mijn gratis match-call",
   ctaSub: "GRATIS · 15 MINUTEN · VRIJBLIJVEND",

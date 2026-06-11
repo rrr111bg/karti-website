@@ -72,7 +72,7 @@ export default async function MatchCallPage({
               </ol>
 
               <p
-                className="font-[family-name:var(--font-heading)] italic text-[#8b3a4a] mb-10"
+                className="font-[family-name:var(--font-heading)] italic text-balance text-[#8b3a4a] mb-10"
                 style={{ fontSize: "clamp(18px, 1.6vw, 22px)", lineHeight: 1.5 }}
               >
                 {MATCHCALL_PAGE.watNiet}

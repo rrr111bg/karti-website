@@ -15,7 +15,13 @@ function prefersReducedMotion(): boolean {
 
 /**
  * useScrollReveal — fires once when element enters viewport.
- * Respects prefers-reduced-motion: inView is true immediately.
+ * Respects prefers-reduced-motion: inView wordt direct na mount true.
+ *
+ * Let op: initialiseer NOOIT op prefersReducedMotion() — de server rendert
+ * false en React 19 patcht attribuut-mismatches bewust niet, waardoor de
+ * eindstaat-klasse nooit aankomt en content onzichtbaar blijft voor
+ * reduced-motion gebruikers. Daarom: server-consistent starten op false
+ * en de eindstaat asynchroon zetten ná hydration.
  */
 export function useScrollReveal<T extends HTMLElement>({
   threshold = 0.2,
@@ -23,12 +29,14 @@ export function useScrollReveal<T extends HTMLElement>({
   rootMargin = "0px 0px -5% 0px",
 }: Options = {}) {
   const ref = useRef<T | null>(null);
-  // Initialize to true if reduced-motion, so consumers render final state.
-  const [inView, setInView] = useState<boolean>(() => prefersReducedMotion());
+  const [inView, setInView] = useState(false);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-    if (prefersReducedMotion()) return;
+    if (prefersReducedMotion()) {
+      const raf = window.requestAnimationFrame(() => setInView(true));
+      return () => window.cancelAnimationFrame(raf);
+    }
 
     const node = ref.current;
     if (!node) return;

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useState, type CSSProperties } from "react";
+import { Fragment, useEffect, useState, type CSSProperties } from "react";
 import {
   MenuIcon,
   CloseIcon,
@@ -44,6 +44,10 @@ import { RootsVisual } from "@/components/karti/RootsVisual";
 import { StickyMatchCall } from "@/components/karti/StickyMatchCall";
 import { TiltCard } from "@/components/karti/TiltCard";
 import { SpotlightPortrait } from "@/components/karti/SpotlightPortrait";
+import { RevealWords } from "@/components/karti/RevealWords";
+import { MagneticButton } from "@/components/karti/MagneticButton";
+import { OntwarDraad } from "@/components/karti/OntwarDraad";
+import { ScrollThread } from "@/components/karti/ScrollThread";
 
 /* Plausible tagged-event: elke klik op een match-call CTA wordt als
    conversie-event gemeten; de UTM-content reist mee naar /match-call
@@ -80,12 +84,16 @@ function Header() {
     <>
     <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
       <div className="container-wide flex items-center justify-between py-4 lg:py-5">
-        <Link href="/" className="t0-wordmark text-[#3d3228]">
+        <Link href="/" className="t0-wordmark whitespace-nowrap text-[#3d3228]">
           K A R T I
         </Link>
-        <nav className="hidden lg:flex items-center gap-10 t6-label text-[#3d3228]">
+        <nav className="hidden xl:flex items-center gap-9 t6-label text-[#3d3228]">
           {NAV_LINKS.map((l) => (
-            <a key={l.href} href={l.href} className="hover:text-[#80662c] transition-colors">
+            <a
+              key={l.href}
+              href={l.href}
+              className="whitespace-nowrap hover:text-[#80662c] transition-colors"
+            >
               {l.label}
             </a>
           ))}
@@ -93,14 +101,14 @@ function Header() {
         <div className="flex items-center gap-3">
           <Link
             href={matchCallHref("header")}
-            className={`btn-primary btn-header ${EVENT_MATCHCALL}`}
+            className={`btn-primary btn-header whitespace-nowrap ${EVENT_MATCHCALL}`}
           >
-            <span className="sm:hidden">Gratis match-call</span>
+            <span className="sm:hidden">Match-call</span>
             <span className="hidden sm:inline">{HERO.primaryCta}</span>
           </Link>
           <button
             type="button"
-            className="lg:hidden text-[#3d3228] p-2 -mr-2"
+            className="xl:hidden text-[#3d3228] p-2 -mr-2"
             aria-label="Menu openen"
             aria-expanded={menuOpen}
             aria-controls="mobiel-menu"
@@ -182,8 +190,12 @@ function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-[#f2eae0]">
-      {/* Wortelsysteem: groeit vanuit de grond onder het portret */}
-      <RootsVisual className="absolute inset-x-0 bottom-0 h-[46%] sm:h-[52%] lg:h-[68%]" />
+      {/* Wortelsysteem: groeit vanuit de grond onder het portret;
+          op desktop gemaskeerd weg van de contentkolom */}
+      <RootsVisual
+        fadeLeft
+        className="absolute inset-x-0 bottom-0 h-[42%] sm:h-[50%] lg:h-[68%]"
+      />
       <ArchitecturalArcIcon
         aria-hidden
         className="absolute -right-28 -top-40 w-[560px] h-[560px] text-[#c9a854] opacity-[0.07]"
@@ -191,7 +203,7 @@ function Hero() {
 
       <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
         {/* Content: waardepropositie + CTA, mobiel als eerste in beeld */}
-        <div className="max-w-[660px]">
+        <div className="max-w-[660px] min-w-0">
           <div className="t6-label text-[#80662c] mb-6 hero-enter-item" style={enter(0)}>
             {HERO.label}
           </div>
@@ -210,15 +222,17 @@ function Hero() {
             <span style={{ color: "#8b3a4a" }}>{accent}</span>
           </p>
           <div
-            className="flex flex-col sm:flex-row sm:items-center gap-4 hero-enter-item"
+            className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 hero-enter-item"
             style={enter(470)}
           >
-            <Link
-              href={matchCallHref("hero")}
-              className={`btn-primary-lg ${EVENT_MATCHCALL}`}
-            >
-              {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
-            </Link>
+            <MagneticButton>
+              <Link
+                href={matchCallHref("hero")}
+                className={`btn-primary-lg ${EVENT_MATCHCALL}`}
+              >
+                {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
+              </Link>
+            </MagneticButton>
             <a href="#methode" className="btn-outline-gold">
               {HERO.secondaryCta}
             </a>
@@ -236,10 +250,10 @@ function Hero() {
 
         {/* Portret in fine-line ringen, geworteld in het stelsel */}
         <div
-          className="relative flex justify-center lg:justify-end hero-enter-item"
+          className="relative flex justify-center lg:justify-end min-w-0 hero-enter-item"
           style={enter(420)}
         >
-          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[400px] lg:h-[400px]">
+          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[330px] lg:h-[330px] xl:w-[400px] xl:h-[400px]">
             <div
               aria-hidden
               className="absolute -inset-5 rounded-full border border-[#c9a854]/40"
@@ -275,7 +289,7 @@ function Methodiek() {
       <div className="container-wide relative">
         <div className="text-center mb-16 lg:mb-20 max-w-[760px] mx-auto">
           <div className="t6-label text-[#80662c] mb-5">{METHODIEK.label}</div>
-          <h2 className="t2-section mb-7">{METHODIEK.headline}</h2>
+          <RevealWords text={METHODIEK.headline} className="t2-section mb-7 text-balance" />
           <hr className="gold-divider mx-auto mb-7" />
           <p className="t4-body text-[#2e2622]">{METHODIEK.intro}</p>
         </div>
@@ -347,19 +361,21 @@ function Herkenning() {
     <section id="herkenning" className="py-28 lg:py-40">
       <div ref={ref} className="container-narrow text-center">
         <hr className="gold-divider-short mx-auto mb-10" />
-        <h2 className="t2-section mb-14">{HERKENNING.headline}</h2>
-        <ul className="flex flex-col gap-6 mb-14">
+        <RevealWords text={HERKENNING.headline} className="t2-section mb-14" />
+        {/* rustige linkerlijn: lijst links uitgelijnd in gecentreerde kolom */}
+        <ul className="flex flex-col gap-7 mb-14 max-w-[620px] mx-auto text-left">
           {HERKENNING.signals.map((signal) => (
             <li
               key={signal}
-              className="t3-quote flex items-start justify-center gap-4 text-[#3d3228]"
+              className="t3-quote flex items-start gap-5 text-[#3d3228]"
+              style={{ fontSize: "clamp(20px, 1.9vw, 27px)" }}
             >
-              <FullMoonIcon className="w-[14px] h-[14px] mt-[16px] text-[#b06b72] flex-shrink-0" />
+              <FullMoonIcon className="w-[12px] h-[12px] mt-[15px] text-[#b06b72] flex-shrink-0" />
               <span>{signal}</span>
             </li>
           ))}
         </ul>
-        <p className="t4-body text-[#2e2622] max-w-[620px] mx-auto mb-12">
+        <p className="t4-body text-balance text-[#2e2622] max-w-[560px] mx-auto mb-12">
           {HERKENNING.body}
         </p>
         <p
@@ -395,7 +411,7 @@ function BewijsBand({
       className={`scroll-reveal-init text-center ${inView ? "scroll-reveal-in" : ""}`}
     >
       <p
-        className="font-[family-name:var(--font-heading)] italic mx-auto max-w-[680px]"
+        className="font-[family-name:var(--font-heading)] italic mx-auto max-w-[680px] text-balance"
         style={{
           fontSize: "clamp(19px, 1.9vw, 26px)",
           lineHeight: 1.5,
@@ -440,41 +456,36 @@ function VanNaar() {
       <div className="container-narrow">
         <div className="text-center mb-14">
           <div className="t6-label text-[#80662c] mb-5">{VAN_NAAR.label}</div>
-          <h2 className="t2-section" style={{ fontSize: "clamp(24px, 2.8vw, 38px)" }}>
-            {VAN_NAAR.headline}
-          </h2>
+          <RevealWords
+            text={VAN_NAAR.headline}
+            className="t2-section text-balance"
+            style={{ fontSize: "clamp(24px, 2.8vw, 38px)" }}
+          />
         </div>
-        <div ref={ref} className="flex flex-col gap-5 max-w-[760px] mx-auto">
+        {/* Eén grid voor alle cellen: kolommen uniform, cellen per rij
+            exact even hoog. De gouden draad ontwart zich van NU naar STRAKS. */}
+        <div ref={ref} className="vannaar-grid max-w-[880px] mx-auto">
           {VAN_NAAR.paren.map((paar, i) => (
-            <div
-              key={paar.van}
-              className={`scroll-reveal-init grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-5 bg-[#faf6f0] border border-[#b08d3e]/25 px-6 py-5 sm:px-8 ${
-                inView ? "scroll-reveal-in" : ""
-              }`}
-              style={{ transitionDelay: `${i * 120}ms` }}
-            >
-              <p
-                className="t4-body text-[#6e6557] sm:text-right"
-                style={{ fontSize: "16px", lineHeight: 1.5 }}
+            <Fragment key={paar.van}>
+              <div
+                className={`vn-cel vn-nu scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
+                style={{ transitionDelay: `${i * 130}ms` }}
               >
-                {paar.van}
-              </p>
-              <ArrowRight
-                aria-hidden
-                className="hidden sm:block w-5 h-5 text-[#b08d3e] justify-self-center"
-              />
-              <hr
-                aria-hidden
-                className="sm:hidden"
-                style={{ width: 34, height: 1, border: 0, background: "#b08d3e", opacity: 0.6 }}
-              />
-              <p
-                className="t5-body-bold text-[#3d3228]"
-                style={{ fontSize: "16px", lineHeight: 1.5 }}
+                <p>{paar.van}</p>
+              </div>
+              <div
+                className={`vn-connector scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
+                style={{ transitionDelay: `${i * 130 + 60}ms` }}
               >
-                {paar.naar}
-              </p>
-            </div>
+                <OntwarDraad active={inView} delayMs={i * 160 + 240} />
+              </div>
+              <div
+                className={`vn-cel vn-straks scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
+                style={{ transitionDelay: `${i * 130 + 90}ms` }}
+              >
+                <p>{paar.naar}</p>
+              </div>
+            </Fragment>
           ))}
         </div>
       </div>
@@ -494,9 +505,9 @@ function Tijdlijn() {
       <div className="container-wide relative">
         <div className="text-center mb-16 max-w-[680px] mx-auto">
           <div className="t6-label text-[#80662c] mb-5">{TIJDLIJN.label}</div>
-          <h2 className="t2-section mb-7">{TIJDLIJN.headline}</h2>
+          <RevealWords text={TIJDLIJN.headline} className="t2-section mb-7" />
           <hr className="gold-divider mx-auto mb-7" />
-          <p className="t4-body text-[#2e2622]">{TIJDLIJN.intro}</p>
+          <p className="t4-body text-balance text-[#2e2622]">{TIJDLIJN.intro}</p>
         </div>
         <div ref={ref} className="relative max-w-[1080px] mx-auto">
           <div
@@ -612,7 +623,7 @@ function DeBouwstenen() {
       <div className="container-wide relative">
         {/* Header */}
         <div className="text-center mb-20 max-w-[720px] mx-auto">
-          <h2 className="t2-section mb-8">{BOUWSTENEN.headline}</h2>
+          <RevealWords text={BOUWSTENEN.headline} className="t2-section mb-8 text-balance" />
           <hr className="gold-divider mx-auto mb-8" />
           <p className="t4-body text-[#2e2622]">{BOUWSTENEN.intro}</p>
         </div>
@@ -659,7 +670,7 @@ function OverNasra() {
           <div>
             <div className="t6-label text-[#80662c] mb-5">{NASRA.label}</div>
             <hr className="gold-divider mb-8" />
-            <h2 className="t2-section mb-8">{NASRA.headline}</h2>
+            <RevealWords text={NASRA.headline} className="t2-section mb-8 text-balance" />
             {NASRA.body.map((p, i) => (
               <p key={i} className="t4-body text-[#2e2622] mb-6">
                 {p}
@@ -727,7 +738,7 @@ function DeTrajecten() {
       <div className="container-wide">
         <div className="text-center mb-20">
           <div className="t0-wordmark text-[#b08d3e] mb-6">K A R T I</div>
-          <h2 className="t2-section mb-6">{TRAJECTEN.headline}</h2>
+          <RevealWords text={TRAJECTEN.headline} className="t2-section mb-6" />
           <hr className="gold-divider mx-auto mb-6" />
           <p className="t3-quote text-[#3d3228] max-w-[640px] mx-auto">
             {TRAJECTEN.subline}
@@ -830,8 +841,8 @@ function DeTrajecten() {
           />
         </div>
         <div className="mt-20 text-center max-w-[720px] mx-auto">
-          <p className="t3-quote text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>
-          <p className="t4-body text-[#6e6557] mb-12">{TRAJECTEN.closingBody}</p>
+          <p className="t3-quote text-balance text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>
+          <p className="t4-body text-balance text-[#6e6557] mb-12 max-w-[560px] mx-auto">{TRAJECTEN.closingBody}</p>
           <Link
             href={matchCallHref("trajecten")}
             className={`btn-primary-lg ${EVENT_MATCHCALL}`}
@@ -860,7 +871,7 @@ function Testimonials() {
             className="mx-auto mb-6"
             style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.7 }}
           />
-          <h2 className="t2-section text-[#fbf7f3]">{TESTIMONIALS.headline}</h2>
+          <RevealWords text={TESTIMONIALS.headline} className="t2-section text-[#fbf7f3]" />
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-[1180px] mx-auto">
@@ -914,17 +925,20 @@ function MatchCall() {
       <GoldCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] text-[#c9a854] opacity-25" />
       <div className="container-narrow relative text-center">
         <div className="t6-label text-[#e2cda0] mb-6">{MATCHCALL.label}</div>
-        <h2 className="t1-hero text-[#fbf7f3] mb-10">{MATCHCALL.headline}</h2>
+        <RevealWords
+          text={MATCHCALL.headline}
+          className="t1-hero text-[#fbf7f3] mb-10 text-balance"
+        />
         <hr
           className="mx-auto mb-10"
           style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.8 }}
         />
         {/* De-risk in plaats van druk: wat het is, wat het niet is */}
-        <div className="max-w-[620px] mx-auto flex flex-col gap-4 mb-2">
+        <div className="max-w-[560px] mx-auto flex flex-col gap-4 mb-2">
           {MATCHCALL.derisk.map((line) => (
             <p
               key={line}
-              className="t4-body text-[#fbf7f3]"
+              className="t4-body text-balance text-[#fbf7f3]"
               style={{ fontSize: "17px", lineHeight: 1.6 }}
             >
               {line}
@@ -932,12 +946,14 @@ function MatchCall() {
           ))}
         </div>
         <div className="mt-12 mb-5 flex justify-center">
-          <Link
-            href={matchCallHref("final")}
-            className={`btn-primary-lg ${EVENT_MATCHCALL}`}
-          >
-            {MATCHCALL.cta}
-          </Link>
+          <MagneticButton>
+            <Link
+              href={matchCallHref("final")}
+              className={`btn-primary-lg ${EVENT_MATCHCALL}`}
+            >
+              {MATCHCALL.cta}
+            </Link>
+          </MagneticButton>
         </div>
         <div className="t6-label text-[#e2cda0] mb-16">{MATCHCALL.ctaSub}</div>
 
@@ -1055,6 +1071,7 @@ export default function Page() {
       </main>
       <Footer />
       <StickyMatchCall />
+      <ScrollThread />
     </>
   );
 }

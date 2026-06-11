@@ -78,7 +78,14 @@ function useGlEligible(inView: boolean): boolean {
   return eligible;
 }
 
-export function RootsVisual({ className = "" }: { className?: string }) {
+export function RootsVisual({
+  className = "",
+  fadeLeft = false,
+}: {
+  className?: string;
+  /** Desktop: wortels faden uit richting de contentkolom links (hero). */
+  fadeLeft?: boolean;
+}) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [inView, setInView] = useState(false);
   const [glActive, setGlActive] = useState(false);
@@ -118,6 +125,7 @@ export function RootsVisual({ className = "" }: { className?: string }) {
           "linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
       }}
     >
+      <div className={`relative w-full h-full${fadeLeft ? " roots-fade-left" : ""}`}>
       <svg
         className={`roots-svg w-full h-full${glActive ? " gl-active" : ""}`}
         viewBox="0 0 1000 600"
@@ -166,6 +174,7 @@ export function RootsVisual({ className = "" }: { className?: string }) {
           <KartiRootsScene onReady={() => setGlActive(true)} />
         </div>
       )}
+      </div>
     </div>
   );
 }
