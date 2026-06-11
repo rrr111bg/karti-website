@@ -290,16 +290,29 @@
   }
   .btn-outline-gold:hover { background: rgba(176, 141, 62, 0.1); }
 
-  /* Header-CTA: compact op mobiel, regulier vanaf sm */
+  /* Header-CTA: compact en licht op mobiel, regulier vanaf sm */
   .btn-header {
-    padding: 12px 20px;
-    font-size: 12px;
-    letter-spacing: 0.14em;
+    padding: 10px 16px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
   }
   @media (min-width: 640px) {
     .btn-header {
       padding: 14px 28px;
       font-size: 13px;
+      letter-spacing: 0.14em;
+    }
+  }
+
+  /* Wordmark in de header: lichter op mobiel, vol vanaf sm */
+  .header-wordmark {
+    font-size: 17px;
+    letter-spacing: 0.24em;
+  }
+  @media (min-width: 640px) {
+    .header-wordmark {
+      font-size: 22px;
+      letter-spacing: 0.3em;
     }
   }
 
@@ -601,15 +614,30 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 34px;
-  }
-  /* mobiel: paren visueel groeperen (meer lucht ná elke STRAKS-cel) */
-  @media (max-width: 639px) {
-    .vannaar-grid .vn-straks:not(:last-child) { margin-bottom: 14px; }
+    height: 24px;
   }
   @media (min-width: 640px) { .vn-connector { height: auto; } }
   .ontwar { width: 64px; height: 24px; }
-  @media (max-width: 639px) { .ontwar { transform: rotate(90deg) scale(0.8); } }
+  /* Mobiel: eenvoudiger en doeltreffender — de NU-regel wordt een kale,
+     gecentreerde fluistering; alleen STRAKS blijft een card. */
+  @media (max-width: 639px) {
+    .vannaar-grid { row-gap: 6px; }
+    .vn-cel { min-height: 0; }
+    .vn-nu {
+      border: 0;
+      background: transparent;
+      padding: 4px 8px;
+      justify-content: center;
+    }
+    .vn-nu p { text-align: center; font-size: 15px; }
+    .vn-straks {
+      padding: 16px 20px;
+      justify-content: center;
+    }
+    .vn-straks p { text-align: center; }
+    .vannaar-grid .vn-straks:not(:last-child) { margin-bottom: 24px; }
+    .ontwar { transform: rotate(90deg) scale(0.65); }
+  }
   html.js .ontwar-path {
     stroke-dasharray: 84;
     stroke-dashoffset: 84;

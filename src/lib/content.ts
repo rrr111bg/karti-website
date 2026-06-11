@@ -332,7 +332,7 @@ export const BEWIJS = {
     quote:
       "Ik voelde al binnen twee weken een duidelijk verschil in energie en focus. Mijn hoofd was stiller, mijn lijf lichter.",
     name: "Soraya",
-    context: "na twee weken in haar traject",
+    context: "na twee weken",
   },
   prijzen: {
     quote:
@@ -378,8 +378,8 @@ export const MATCHCALL = {
   cta: "Plan mijn gratis match-call",
   ctaSub: "GRATIS · 15 MINUTEN · VRIJBLIJVEND",
   closing: [
-    "Je lichaam liegt niet. Het vraagt om aandacht.",
-    "En jij verdient het om te luisteren.",
+    "Je lichaam liegt niet. Het vraagt om aandacht.",
+    "En jij verdient het om te luisteren.",
   ],
 } as const;
 

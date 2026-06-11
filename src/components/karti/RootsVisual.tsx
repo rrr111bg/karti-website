@@ -120,9 +120,9 @@ export function RootsVisual({
       className={`pointer-events-none select-none ${className}`}
       style={{
         maskImage:
-          "linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
+          "linear-gradient(to bottom, transparent 0%, black 14%, black 72%, transparent 100%)",
         WebkitMaskImage:
-          "linear-gradient(to bottom, transparent 0%, black 14%, black 78%, transparent 100%)",
+          "linear-gradient(to bottom, transparent 0%, black 14%, black 72%, transparent 100%)",
       }}
     >
       <div className={`relative w-full h-full${fadeLeft ? " roots-fade-left" : ""}`}>

@@ -83,8 +83,8 @@ function Header() {
   return (
     <>
     <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
-      <div className="container-wide flex items-center justify-between py-4 lg:py-5">
-        <Link href="/" className="t0-wordmark whitespace-nowrap text-[#3d3228]">
+      <div className="container-wide flex items-center justify-between py-3 sm:py-4 lg:py-5">
+        <Link href="/" className="t0-wordmark header-wordmark whitespace-nowrap text-[#3d3228]">
           K A R T I
         </Link>
         <nav className="hidden xl:flex items-center gap-9 t6-label text-[#3d3228]">
@@ -194,7 +194,7 @@ function Hero() {
           op desktop gemaskeerd weg van de contentkolom */}
       <RootsVisual
         fadeLeft
-        className="absolute inset-x-0 bottom-0 h-[42%] sm:h-[50%] lg:h-[68%]"
+        className="absolute inset-x-0 bottom-0 h-[38%] sm:h-[50%] lg:h-[68%]"
       />
       <ArchitecturalArcIcon
         aria-hidden
@@ -281,14 +281,14 @@ const METHODIEK_ICONS = [AwarenessIcon, PathwayIcon, BalanceIcon, SeasonsIcon];
 function Methodiek() {
   const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.15 });
   return (
-    <section id="methode" className="relative bg-[#faf6f0] py-28 lg:py-36 overflow-hidden">
+    <section id="methode" className="relative bg-[#faf6f0] py-20 lg:py-36 overflow-hidden">
       <GoldCircleIcon
         aria-hidden
         className="absolute -left-44 top-20 w-[440px] h-[440px] text-[#c9a854] opacity-[0.07]"
       />
       <div className="container-wide relative">
-        <div className="text-center mb-16 lg:mb-20 max-w-[760px] mx-auto">
-          <div className="t6-label text-[#80662c] mb-5">{METHODIEK.label}</div>
+        <div className="text-center mb-10 lg:mb-20 max-w-[760px] mx-auto">
+          <div className="t6-label text-[#80662c] mb-4 lg:mb-5">{METHODIEK.label}</div>
           <RevealWords text={METHODIEK.headline} className="t2-section mb-7 text-balance" />
           <hr className="gold-divider mx-auto mb-7" />
           <p className="t4-body text-[#2e2622]">{METHODIEK.intro}</p>
@@ -358,12 +358,12 @@ function Methodiek() {
 function Herkenning() {
   const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.25 });
   return (
-    <section id="herkenning" className="py-28 lg:py-40">
+    <section id="herkenning" className="py-20 lg:py-40">
       <div ref={ref} className="container-narrow text-center">
         <hr className="gold-divider-short mx-auto mb-10" />
-        <RevealWords text={HERKENNING.headline} className="t2-section mb-14" />
+        <RevealWords text={HERKENNING.headline} className="t2-section mb-10 lg:mb-14" />
         {/* rustige linkerlijn: lijst links uitgelijnd in gecentreerde kolom */}
-        <ul className="flex flex-col gap-7 mb-14 max-w-[620px] mx-auto text-left">
+        <ul className="flex flex-col gap-6 lg:gap-7 mb-10 lg:mb-14 max-w-[620px] mx-auto text-left">
           {HERKENNING.signals.map((signal) => (
             <li
               key={signal}
@@ -420,12 +420,13 @@ function BewijsBand({
       >
         &ldquo;{quote}&rdquo;
       </p>
-      <div className="flex items-center justify-center gap-3 mt-5">
-        <span className="gold-dot" aria-hidden />
+      <div className="mt-5">
+        {/* dot ín de tekstflow: blijft aan de naam geplakt, ook bij wrap */}
         <span
           className="t6-label"
           style={{ color: dark ? "#e2cda0" : "#80662c" }}
         >
+          <span className="gold-dot align-middle mr-3" aria-hidden />
           {name} · {context}
         </span>
       </div>
@@ -435,9 +436,9 @@ function BewijsBand({
 
 function BewijsOnderHero() {
   return (
-    <section className="bg-[#f2eae0] pb-20 lg:pb-24">
+    <section className="bg-[#f2eae0] pb-14 lg:pb-24">
       <div className="container-narrow">
-        <hr className="gold-divider-short mx-auto mb-10" />
+        <hr className="gold-divider-short mx-auto mb-8 lg:mb-10" />
         <BewijsBand
           quote={BEWIJS.hero.quote}
           name={BEWIJS.hero.name}
@@ -452,10 +453,10 @@ function BewijsOnderHero() {
 function VanNaar() {
   const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
   return (
-    <section className="relative bg-[#f2eae0] pb-28 lg:pb-36 overflow-hidden">
+    <section className="relative bg-[#f2eae0] pb-20 lg:pb-36 overflow-hidden">
       <div className="container-narrow">
-        <div className="text-center mb-14">
-          <div className="t6-label text-[#80662c] mb-5">{VAN_NAAR.label}</div>
+        <div className="text-center mb-10 lg:mb-14">
+          <div className="t6-label text-[#80662c] mb-4 lg:mb-5">{VAN_NAAR.label}</div>
           <RevealWords
             text={VAN_NAAR.headline}
             className="t2-section text-balance"
@@ -497,14 +498,14 @@ function VanNaar() {
 function Tijdlijn() {
   const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.15 });
   return (
-    <section className="relative bg-[#faf6f0] py-28 lg:py-36 overflow-hidden">
+    <section className="relative bg-[#faf6f0] py-20 lg:py-36 overflow-hidden">
       <ArchitecturalArcIcon
         aria-hidden
         className="absolute -left-32 -bottom-32 w-[420px] h-[420px] text-[#c9a854] opacity-[0.06]"
       />
       <div className="container-wide relative">
-        <div className="text-center mb-16 max-w-[680px] mx-auto">
-          <div className="t6-label text-[#80662c] mb-5">{TIJDLIJN.label}</div>
+        <div className="text-center mb-10 lg:mb-16 max-w-[680px] mx-auto">
+          <div className="t6-label text-[#80662c] mb-4 lg:mb-5">{TIJDLIJN.label}</div>
           <RevealWords text={TIJDLIJN.headline} className="t2-section mb-7" />
           <hr className="gold-divider mx-auto mb-7" />
           <p className="t4-body text-balance text-[#2e2622]">{TIJDLIJN.intro}</p>
@@ -618,12 +619,12 @@ function DeBouwstenen() {
   return (
     <section
       id="bouwstenen"
-      className="relative bg-[#f2eae0] py-28 lg:py-40 overflow-hidden"
+      className="relative bg-[#f2eae0] py-20 lg:py-40 overflow-hidden"
     >
       <div className="container-wide relative">
         {/* Header */}
-        <div className="text-center mb-20 max-w-[720px] mx-auto">
-          <RevealWords text={BOUWSTENEN.headline} className="t2-section mb-8 text-balance" />
+        <div className="text-center mb-10 lg:mb-20 max-w-[720px] mx-auto">
+          <RevealWords text={BOUWSTENEN.headline} className="t2-section mb-6 lg:mb-8 text-balance" />
           <hr className="gold-divider mx-auto mb-8" />
           <p className="t4-body text-[#2e2622]">{BOUWSTENEN.intro}</p>
         </div>
@@ -664,7 +665,7 @@ function DeBouwstenen() {
 function OverNasra() {
   const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.25 });
   return (
-    <section id="nasra" className="py-28 lg:py-40 bg-[#f5eded]/60">
+    <section id="nasra" className="py-20 lg:py-40 bg-[#f5eded]/60">
       <div className="container-wide">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           <div>
@@ -708,8 +709,9 @@ function OverNasra() {
             </div>
             {/* Fine gold frame outside portrait */}
             <div className="pointer-events-none absolute -inset-4 border border-[#b08d3e]/50" />
-            {/* Small circular overlapping portrait — /public/images/nasra-closeup.jpg */}
-            <div className="absolute -bottom-10 -left-10 w-[140px] h-[140px] rounded-full border border-[#b08d3e]/60 overflow-hidden bg-[#faf6f0]">
+            {/* Small circular overlapping portrait — /public/images/nasra-closeup.jpg
+                mobiel kleiner en binnen de kaart; vanaf lg overlappend */}
+            <div className="absolute -bottom-6 left-3 w-[96px] h-[96px] lg:-bottom-10 lg:-left-10 lg:w-[140px] lg:h-[140px] rounded-full border border-[#b08d3e]/60 overflow-hidden bg-[#faf6f0]">
               <Image
                 src="/images/nasra-closeup.jpg"
                 alt="Nasra close-up"
@@ -734,12 +736,12 @@ function OverNasra() {
 /* ─────────────── Trajecten ─────────────── */
 function DeTrajecten() {
   return (
-    <section id="trajecten" className="py-28 lg:py-40">
+    <section id="trajecten" className="py-20 lg:py-40">
       <div className="container-wide">
-        <div className="text-center mb-20">
-          <div className="t0-wordmark text-[#b08d3e] mb-6">K A R T I</div>
-          <RevealWords text={TRAJECTEN.headline} className="t2-section mb-6" />
-          <hr className="gold-divider mx-auto mb-6" />
+        <div className="text-center mb-10 lg:mb-20">
+          <div className="t0-wordmark text-[#b08d3e] mb-3 lg:mb-6">K A R T I</div>
+          <RevealWords text={TRAJECTEN.headline} className="t2-section mb-4 lg:mb-6" />
+          <hr className="gold-divider mx-auto mb-4 lg:mb-6" />
           <p className="t3-quote text-[#3d3228] max-w-[640px] mx-auto">
             {TRAJECTEN.subline}
           </p>
@@ -833,14 +835,14 @@ function DeTrajecten() {
         </div>
 
         {/* Bewijs op het beslismoment: haar Blueprint, in klantenwoorden */}
-        <div className="mt-16 max-w-[720px] mx-auto bg-[#faf6f0] border border-[#b08d3e]/30 px-8 py-10 lg:px-12">
+        <div className="mt-12 lg:mt-16 max-w-[720px] mx-auto bg-[#faf6f0] border border-[#b08d3e]/30 px-8 py-10 lg:px-12">
           <BewijsBand
             quote={BEWIJS.prijzen.quote}
             name={BEWIJS.prijzen.name}
             context={BEWIJS.prijzen.context}
           />
         </div>
-        <div className="mt-20 text-center max-w-[720px] mx-auto">
+        <div className="mt-14 lg:mt-20 text-center max-w-[720px] mx-auto">
           <p className="t3-quote text-balance text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>
           <p className="t4-body text-balance text-[#6e6557] mb-12 max-w-[560px] mx-auto">{TRAJECTEN.closingBody}</p>
           <Link
@@ -863,10 +865,10 @@ function Testimonials() {
   const items = showAll ? TESTIMONIALS.items : TESTIMONIALS.items.slice(0, 3);
 
   return (
-    <section id="testimonials" className="relative night-bloom py-28 lg:py-40">
+    <section id="testimonials" className="relative night-bloom py-20 lg:py-40">
       <div className="velvet-texture" />
       <div className="container-wide relative">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10 lg:mb-16">
           <hr
             className="mx-auto mb-6"
             style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.7 }}
@@ -919,22 +921,25 @@ function Testimonials() {
 /* ─────────────── Match-call (final CTA) ─────────────── */
 function MatchCall() {
   return (
-    <section id="matchcall" className="relative night-bloom py-28 lg:py-40">
+    <section id="matchcall" className="relative night-bloom py-20 lg:py-40 overflow-hidden">
       <div className="velvet-texture" />
-      <ArchitecturalArcIcon className="absolute -right-40 top-1/2 -translate-y-1/2 w-[720px] h-[720px] text-[#c9a854] opacity-[0.08]" />
-      <GoldCircleIcon className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] text-[#c9a854] opacity-25" />
+      {/* decoratie alleen in de bovenste helft: de onderste helft blijft stil */}
+      <ArchitecturalArcIcon
+        aria-hidden
+        className="absolute -right-40 top-0 -translate-y-1/3 w-[720px] h-[720px] text-[#c9a854] opacity-[0.06]"
+      />
       <div className="container-narrow relative text-center">
-        <div className="t6-label text-[#e2cda0] mb-6">{MATCHCALL.label}</div>
+        <div className="t6-label text-[#e2cda0] mb-5 lg:mb-6">{MATCHCALL.label}</div>
         <RevealWords
           text={MATCHCALL.headline}
-          className="t1-hero text-[#fbf7f3] mb-10 text-balance"
+          className="t1-hero text-[#fbf7f3] mb-8 lg:mb-10 text-balance"
         />
         <hr
-          className="mx-auto mb-10"
+          className="mx-auto mb-8 lg:mb-10"
           style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.8 }}
         />
         {/* De-risk in plaats van druk: wat het is, wat het niet is */}
-        <div className="max-w-[560px] mx-auto flex flex-col gap-4 mb-2">
+        <div className="max-w-[560px] mx-auto flex flex-col gap-4">
           {MATCHCALL.derisk.map((line) => (
             <p
               key={line}
@@ -945,7 +950,22 @@ function MatchCall() {
             </p>
           ))}
         </div>
-        <div className="mt-12 mb-5 flex justify-center">
+
+        {/* Bewijs exact op het beslismoment */}
+        <div className="max-w-[560px] mx-auto mt-10 lg:mt-12 mb-10 lg:mb-12">
+          <hr
+            className="mx-auto mb-8"
+            style={{ width: 56, height: 1, border: 0, background: "#c9a854", opacity: 0.55 }}
+          />
+          <BewijsBand
+            quote={BEWIJS.final.quote}
+            name={BEWIJS.final.name}
+            context={BEWIJS.final.context}
+            tone="dark"
+          />
+        </div>
+
+        <div className="mb-5 flex justify-center">
           <MagneticButton>
             <Link
               href={matchCallHref("final")}
@@ -955,23 +975,14 @@ function MatchCall() {
             </Link>
           </MagneticButton>
         </div>
-        <div className="t6-label text-[#e2cda0] mb-16">{MATCHCALL.ctaSub}</div>
+        <div className="t6-label text-[#e2cda0]">{MATCHCALL.ctaSub}</div>
 
-        {/* Laatste stem vóór de beslissing */}
-        <div className="max-w-[640px] mx-auto border-t border-[#c9a854]/25 pt-12 mb-14">
-          <BewijsBand
-            quote={BEWIJS.final.quote}
-            name={BEWIJS.final.name}
-            context={BEWIJS.final.context}
-            tone="dark"
-          />
-        </div>
-
-        <div>
+        {/* poëtische sign-off, in stilte */}
+        <div className="mt-14 lg:mt-20">
           {MATCHCALL.closing.map((line) => (
             <p
               key={line}
-              className="font-[family-name:var(--font-heading)] italic text-[#c9a854] mb-3"
+              className="font-[family-name:var(--font-heading)] italic text-balance text-[#c9a854] mb-3"
               style={{ fontSize: "clamp(20px, 1.8vw, 26px)", lineHeight: 1.5 }}
             >
               {line}
