@@ -473,6 +473,61 @@
     .sticky-cta { display: none; }
   }
 
+  /* ─── Spotlight-reveal op het hero-portret ───
+     Warme goudtint binnen een zachte lichtcirkel die de cursor volgt.
+     Alleen desktop (component rendert de overlay niet op touch). */
+  .spotlight-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 600ms ease;
+    pointer-events: none;
+    -webkit-mask-image: radial-gradient(
+      circle 150px at var(--sx, -999px) var(--sy, -999px),
+      #000 0%, #000 38%, transparent 72%
+    );
+    mask-image: radial-gradient(
+      circle 150px at var(--sx, -999px) var(--sy, -999px),
+      #000 0%, #000 38%, transparent 72%
+    );
+  }
+  .spotlight-overlay.visible { opacity: 1; }
+  .spotlight-warm {
+    filter: sepia(0.38) saturate(1.35) brightness(1.04);
+  }
+
+  /* ─── Juridische pagina's ─────────────────── */
+  .legal-copy h2 {
+    font-size: 20px;
+    margin: 36px 0 10px;
+  }
+  .legal-copy p, .legal-copy li {
+    font-family: var(--font-body), "Instrument Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #2e2622;
+    margin-bottom: 12px;
+  }
+  .legal-copy ul {
+    list-style: disc;
+    padding-left: 22px;
+    margin-bottom: 14px;
+  }
+  .legal-copy a {
+    text-decoration: underline;
+    text-decoration-color: #b08d3e;
+    text-underline-offset: 4px;
+  }
+
+  /* ─── Calendly inline agenda (/match-call) ───
+     Mobiel hoger zodat de tijdstap niet intern hoeft te scrollen. */
+  .calendly-holder {
+    height: 1020px;
+  }
+  @media (min-width: 768px) {
+    .calendly-holder { height: 740px; }
+  }
+
   /* ─── Wortelsysteem (hero) ──────────────────
      SVG-paden tekenen zichzelf via CSS (geen JS nodig); de WebGL-laag
      vervangt dit alleen op apparaten die het aantoonbaar aankunnen. */

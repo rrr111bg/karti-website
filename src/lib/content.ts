@@ -37,10 +37,80 @@ export const HERO = {
   label: "WIJSHEID VAN HET VROUWENLICHAAM",
   headline: ["Jouw lichaam fluistert.", "Ik leer je luisteren."],
   pullQuote: "De handleiding die je nooit hebt gekregen. Over jezelf.",
-  primaryCta: "Plan mijn match-call",
-  ctaSub: "15 MINUTEN · VRIJBLIJVEND · EERLIJK",
+  primaryCta: "Plan mijn gratis match-call",
+  ctaSub: "GRATIS · 15 MINUTEN · VRIJBLIJVEND",
   secondaryCta: "Lees hoe ik werk",
   trustLine: "1:1 begeleiding door Nasra · HBO-verpleegkundige",
+} as const;
+
+/* De boekingspagina: de laatste meter, volledig in eigen hand.
+   Geen verkooppraatje-energie; de-risken en ruimte geven. */
+export const MATCHCALL_PAGE = {
+  label: "GRATIS MATCH-CALL · 15 MINUTEN",
+  headline: "Eén gesprek. Geen verplichtingen.",
+  intro:
+    "Je spreekt Nasra zelf, niet een team. Jullie kijken samen of jouw vraag en haar manier van werken bij elkaar passen. Meer is het niet, en dat is precies genoeg.",
+  watWel: [
+    "Je vertelt wat er speelt, in jouw woorden",
+    "Nasra stelt vragen en deelt hoe zij ernaar kijkt",
+    "Past het? Dan hoor je hoe een traject eruit zou zien",
+  ],
+  watNiet:
+    "Geen script, geen druk om te beslissen. Past het niet, dan zegt Nasra dat gewoon en denkt ze mee over wat wel bij je past.",
+  agendaLabel: "KIES EEN MOMENT",
+  fallbackText: "Opent de agenda hieronder niet?",
+  fallbackCta: "Open de agenda direct",
+} as const;
+
+/* De verschuiving: van overleven naar begrijpen. Brug tussen
+   herkenning en methode; uitkomst-taal zonder beloftes. */
+export const VAN_NAAR = {
+  label: "DE VERSCHUIVING",
+  headline: "Wat er verandert als je je lichaam leert lezen",
+  paren: [
+    {
+      van: "Moe ondanks acht uur slaap",
+      naar: "Energie waar je dag op kan leunen",
+    },
+    {
+      van: "Elke maand pijn die je wegdrukt",
+      naar: "Een cyclus die je begrijpt en voelt aankomen",
+    },
+    {
+      van: "Van arts naar arts, niemand kijkt verder",
+      naar: "Eén iemand die het hele plaatje ziet",
+    },
+    {
+      van: "Vechten tegen je lichaam",
+      naar: "Leven mét je lichaam",
+    },
+  ],
+} as const;
+
+/* Jouw eerste drie maanden: maakt het hoofdaanbod tastbaar.
+   Inspanningsgericht geformuleerd, geen resultaatbeloftes. */
+export const TIJDLIJN = {
+  label: "ZO ZIET HET ERUIT",
+  headline: "Jouw eerste drie maanden",
+  intro:
+    "Geen losse tips, een opbouw. Dit is hoe The Body & Being Guide zich ontvouwt.",
+  maanden: [
+    {
+      index: "Maand 1",
+      title: "Het fundament",
+      body: "Diepe intake en je Elementenprofiel. Nasra bouwt jouw Blueprint van 50+ pagina's en jullie starten bij bewustzijn: wat zegt je lichaam eigenlijk?",
+    },
+    {
+      index: "Maand 2",
+      title: "Voeden en reguleren",
+      body: "De Fasekeuken gaat open: eten per cyclusfase, bloedsuiker als basis, je zenuwstelsel leren kalmeren. Maandelijkse deep dive plus WhatsApp-lijn met Nasra.",
+    },
+    {
+      index: "Maand 3",
+      title: "Jouw systeem",
+      body: "Hormonen en cyclussynchronisatie vallen op hun plek. Je leert je eigen patronen lezen, zodat je verder kunt zonder afhankelijk te blijven.",
+    },
+  ],
 } as const;
 
 export const HERKENNING = {
@@ -132,7 +202,7 @@ export const NASRA = {
     "Ik combineer mijn medische achtergrond met diepgaande kennis van hormonen, darmen, voeding en emotionele patronen. Waar nodig verweef ik elementen uit het islamitische kader, niet als religie, maar als praktische wijsheid voor rust en regulatie.",
   ],
   deepRoseQuote: "Gezondheid begint niet bij wat je eet. Het begint bij wat je voelt.",
-  secondaryCta: "Plan een match-call",
+  secondaryCta: "Plan een gratis match-call",
 } as const;
 
 export const TRAJECTEN = {
@@ -173,31 +243,31 @@ export const TRAJECTEN = {
       price: "€ 3.000",
       body: "Alles uit de Body & Being Guide, plus:",
       features: [
-        "Lab analyse: volledige hormonale screening",
-        "Medische deep dive: harde data in je Blueprint",
+        "Lab-analyse van je hormoonwaarden via een gecertificeerd laboratorium",
+        "Verdieping op je labwaarden, vertaald naar je Blueprint",
         "2 extra deep dive sessies + priority support",
         "6 maanden toegang tot de WhatsApp supportlijn",
-        "Persoonlijk supplementen- en detoxprotocol op maat",
+        "Persoonlijk supplementen- en herstelprotocol op maat",
       ],
       featured: false,
     },
   ],
+  investeringLabel: "INVESTERING",
   closingQuote:
     "Dit is niet voor vrouwen op zoek naar een magic pill. Dit is voor vrouwen die bereid zijn zichzelf te ontmoeten.",
   closingBody:
     "Na drie maanden begrijp je waarom je reageert zoals je reageert. Je hebt een systeem dat werkt. Voor de rest van je leven.",
-  finalCta: "Plan mijn match-call",
+  finalCta: "Plan mijn gratis match-call",
 } as const;
 
+/* Curatie juni 2026: eczeem-testimonial (genezingsclaim huidaandoening)
+   uit de launch-set; arts-vergelijkende TITELS verzacht. Quotes zelf zijn
+   citaten en worden nooit herschreven, alleen geselecteerd. */
 export const TESTIMONIALS = {
   headline: "Vrouwen die je voorgingen",
+  expandLabel: "Lees meer verhalen",
+  collapseLabel: "Toon minder",
   items: [
-    {
-      title: "Een jaar vrijwel eczeemvrij",
-      quote:
-        "Ik heb jarenlang last gehad van eczeem. Binnen een paar weken na Nasra's protocol verdween het en is het sindsdien amper nog teruggekomen. Voor het eerst in jaren voelt mijn huid weer van mij.",
-      name: "Nima",
-    },
     {
       title: "Eindelijk écht gezien",
       quote:
@@ -217,7 +287,7 @@ export const TESTIMONIALS = {
       name: "Delayla",
     },
     {
-      title: "De huisarts zag niks",
+      title: "Eindelijk het hele plaatje",
       quote:
         "Mijn huisarts zei dat mijn bloedwaarden 'prima' waren. Nasra zag in één gesprek waar het werkelijk zat. Zij kijkt naar het systeem, niet naar losse labels.",
       name: "Yasmin",
@@ -229,7 +299,7 @@ export const TESTIMONIALS = {
       name: "Sanne",
     },
     {
-      title: "Nasra ziet wat artsen missen",
+      title: "Scherp, warm en precies",
       quote:
         "Ik ben van arts naar arts gegaan. Nasra zag binnen twee gesprekken wat niemand had gezien. Haar blik is scherp, warm en ongelooflijk precies.",
       name: "Sofia",
@@ -255,6 +325,29 @@ export const TESTIMONIALS = {
   ],
 } as const;
 
+/* Verdeeld bewijs: drie claim-arme quotes op de beslismomenten.
+   Context-labels parafraseren alleen wat de quote zelf zegt. */
+export const BEWIJS = {
+  hero: {
+    quote:
+      "Ik voelde al binnen twee weken een duidelijk verschil in energie en focus. Mijn hoofd was stiller, mijn lijf lichter.",
+    name: "Soraya",
+    context: "na twee weken in haar traject",
+  },
+  prijzen: {
+    quote:
+      "Mijn Blueprint is meer dan 50 pagina's en leest als een brief aan mezelf. Alles klopt, tot aan details die ik nooit eerder had durven benoemen.",
+    name: "Fatima",
+    context: "over haar Blueprint",
+  },
+  final: {
+    quote:
+      "Ik voel me eindelijk echt gezien in wat ik doormaak. Het is geen protocol, het is echt op mij afgestemd.",
+    name: "Lamya",
+    context: "over de begeleiding",
+  },
+} as const;
+
 export const NEWSLETTER = {
   label: "NIEUWSBRIEF",
   headline: "Een brief van Nasra. Elke week.",
@@ -276,12 +369,14 @@ export const INSTAGRAM = {
 export const MATCHCALL = {
   label: "THE KARTI WAY",
   headline: "Ben jij klaar om je lichaam te leren begrijpen?",
-  questions: [
-    "Wat kost het je als je over een jaar nog steeds op dit punt staat?",
-    "Wil je nog een jaar tegen jezelf zeggen: het hoort erbij?",
+  /* Geen urgentie, geen druk: de-risk regels vanuit overvloed. */
+  derisk: [
+    "Je spreekt Nasra zelf, vijftien minuten, gratis.",
+    "Geen script en geen verplichting. Jullie kijken alleen of het past.",
+    "Past het niet, dan hoor je dat gewoon, met een eerlijke gedachte over wat wel bij je past.",
   ],
-  cta: "Plan mijn match-call",
-  ctaSub: "15 MINUTEN · VRIJBLIJVEND · EERLIJK",
+  cta: "Plan mijn gratis match-call",
+  ctaSub: "GRATIS · 15 MINUTEN · VRIJBLIJVEND",
   closing: [
     "Je lichaam liegt niet. Het vraagt om aandacht.",
     "En jij verdient het om te luisteren.",
@@ -301,5 +396,9 @@ export const FOOTER = {
     { href: "#bouwstenen", label: "Bouwstenen" },
     { href: "#trajecten", label: "The Karti Way" },
   ],
-  legal: "© 2026 Karti Health · Privacy · Voorwaarden",
+  legal: "© 2026 Karti Health",
+  legalLinks: [
+    { href: "/privacy", label: "Privacy" },
+    { href: "/voorwaarden", label: "Voorwaarden" },
+  ],
 } as const;

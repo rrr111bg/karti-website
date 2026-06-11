@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import {
   MenuIcon,
   CloseIcon,
@@ -25,17 +25,17 @@ import {
   SeasonsIcon,
 } from "@/components/icons";
 import {
-  calendlyUrl,
   NAV_LINKS,
   HERO,
   HERKENNING,
   METHODIEK,
+  VAN_NAAR,
+  TIJDLIJN,
+  BEWIJS,
   BOUWSTENEN,
   NASRA,
   TRAJECTEN,
   TESTIMONIALS,
-  NEWSLETTER,
-  INSTAGRAM,
   MATCHCALL,
   FOOTER,
 } from "@/lib/content";
@@ -43,10 +43,17 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { RootsVisual } from "@/components/karti/RootsVisual";
 import { StickyMatchCall } from "@/components/karti/StickyMatchCall";
 import { TiltCard } from "@/components/karti/TiltCard";
+import { SpotlightPortrait } from "@/components/karti/SpotlightPortrait";
 
 /* Plausible tagged-event: elke klik op een match-call CTA wordt als
-   conversie-event gemeten, met UTM-content per plek (zie calendlyUrl). */
+   conversie-event gemeten; de UTM-content reist mee naar /match-call
+   en vandaar de Calendly-embed in, zodat elke boeking traceerbaar is. */
 const EVENT_MATCHCALL = "plausible-event-name=matchcall-click";
+
+/** Interne boekingsroute met UTM per plek op de site. */
+function matchCallHref(content: string): string {
+  return `/match-call?utm_content=${encodeURIComponent(content)}`;
+}
 
 /* ─────────────── Header ─────────────── */
 function Header() {
@@ -84,15 +91,13 @@ function Header() {
           ))}
         </nav>
         <div className="flex items-center gap-3">
-          <a
-            href={calendlyUrl("header")}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={matchCallHref("header")}
             className={`btn-primary btn-header ${EVENT_MATCHCALL}`}
           >
-            <span className="sm:hidden">Match-call</span>
+            <span className="sm:hidden">Gratis match-call</span>
             <span className="hidden sm:inline">{HERO.primaryCta}</span>
-          </a>
+          </Link>
           <button
             type="button"
             className="lg:hidden text-[#3d3228] p-2 -mr-2"
@@ -141,15 +146,13 @@ function Header() {
                 {l.label}
               </a>
             ))}
-            <a
-              href={calendlyUrl("menu")}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={matchCallHref("menu")}
               onClick={() => setMenuOpen(false)}
               className={`btn-primary-lg mt-6 ${EVENT_MATCHCALL}`}
             >
               {HERO.primaryCta}
-            </a>
+            </Link>
           </nav>
           <div className="relative pb-10 text-center t6-label text-[#e2cda0]">
             {HERO.ctaSub}
@@ -210,14 +213,12 @@ function Hero() {
             className="flex flex-col sm:flex-row sm:items-center gap-4 hero-enter-item"
             style={enter(470)}
           >
-            <a
-              href={calendlyUrl("hero")}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={matchCallHref("hero")}
               className={`btn-primary-lg ${EVENT_MATCHCALL}`}
             >
               {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
             <a href="#methode" className="btn-outline-gold">
               {HERO.secondaryCta}
             </a>
@@ -247,16 +248,7 @@ function Hero() {
               aria-hidden
               className="hidden lg:block absolute -inset-10 rounded-full border border-[#c9a854]/20"
             />
-            <div className="relative w-full h-full rounded-full overflow-hidden border border-[#b08d3e]/60 bg-[#faf6f0]">
-              <Image
-                src="/images/nasra-closeup.jpg"
-                alt="Nasra, oprichter van Karti"
-                fill
-                priority
-                sizes="(max-width: 1024px) 250px, 400px"
-                className="object-cover scale-[1.04]"
-              />
-            </div>
+            <SpotlightPortrait />
             <div className="absolute -bottom-2 -left-7 gold-dots-cluster" aria-hidden>
               <span />
               <span />
@@ -378,6 +370,170 @@ function Herkenning() {
         >
           {HERKENNING.deepRoseQuote}
         </p>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────── Verdeeld bewijs: één stem op het juiste moment ─────────────── */
+function BewijsBand({
+  quote,
+  name,
+  context,
+  tone = "light",
+}: {
+  quote: string;
+  name: string;
+  context: string;
+  tone?: "light" | "dark";
+}) {
+  const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.3 });
+  const dark = tone === "dark";
+  return (
+    <div
+      ref={ref}
+      className={`scroll-reveal-init text-center ${inView ? "scroll-reveal-in" : ""}`}
+    >
+      <p
+        className="font-[family-name:var(--font-heading)] italic mx-auto max-w-[680px]"
+        style={{
+          fontSize: "clamp(19px, 1.9vw, 26px)",
+          lineHeight: 1.5,
+          color: dark ? "#fbf7f3" : "#3d3228",
+        }}
+      >
+        &ldquo;{quote}&rdquo;
+      </p>
+      <div className="flex items-center justify-center gap-3 mt-5">
+        <span className="gold-dot" aria-hidden />
+        <span
+          className="t6-label"
+          style={{ color: dark ? "#e2cda0" : "#80662c" }}
+        >
+          {name} · {context}
+        </span>
+      </div>
+    </div>
+  );
+}
+
+function BewijsOnderHero() {
+  return (
+    <section className="bg-[#f2eae0] pb-20 lg:pb-24">
+      <div className="container-narrow">
+        <hr className="gold-divider-short mx-auto mb-10" />
+        <BewijsBand
+          quote={BEWIJS.hero.quote}
+          name={BEWIJS.hero.name}
+          context={BEWIJS.hero.context}
+        />
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────── De Verschuiving: van overleven naar begrijpen ─────────────── */
+function VanNaar() {
+  const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
+  return (
+    <section className="relative bg-[#f2eae0] pb-28 lg:pb-36 overflow-hidden">
+      <div className="container-narrow">
+        <div className="text-center mb-14">
+          <div className="t6-label text-[#80662c] mb-5">{VAN_NAAR.label}</div>
+          <h2 className="t2-section" style={{ fontSize: "clamp(24px, 2.8vw, 38px)" }}>
+            {VAN_NAAR.headline}
+          </h2>
+        </div>
+        <div ref={ref} className="flex flex-col gap-5 max-w-[760px] mx-auto">
+          {VAN_NAAR.paren.map((paar, i) => (
+            <div
+              key={paar.van}
+              className={`scroll-reveal-init grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] items-center gap-2 sm:gap-5 bg-[#faf6f0] border border-[#b08d3e]/25 px-6 py-5 sm:px-8 ${
+                inView ? "scroll-reveal-in" : ""
+              }`}
+              style={{ transitionDelay: `${i * 120}ms` }}
+            >
+              <p
+                className="t4-body text-[#6e6557] sm:text-right"
+                style={{ fontSize: "16px", lineHeight: 1.5 }}
+              >
+                {paar.van}
+              </p>
+              <ArrowRight
+                aria-hidden
+                className="hidden sm:block w-5 h-5 text-[#b08d3e] justify-self-center"
+              />
+              <hr
+                aria-hidden
+                className="sm:hidden"
+                style={{ width: 34, height: 1, border: 0, background: "#b08d3e", opacity: 0.6 }}
+              />
+              <p
+                className="t5-body-bold text-[#3d3228]"
+                style={{ fontSize: "16px", lineHeight: 1.5 }}
+              >
+                {paar.naar}
+              </p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ─────────────── Jouw eerste drie maanden (tastbaar maken) ─────────────── */
+function Tijdlijn() {
+  const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.15 });
+  return (
+    <section className="relative bg-[#faf6f0] py-28 lg:py-36 overflow-hidden">
+      <ArchitecturalArcIcon
+        aria-hidden
+        className="absolute -left-32 -bottom-32 w-[420px] h-[420px] text-[#c9a854] opacity-[0.06]"
+      />
+      <div className="container-wide relative">
+        <div className="text-center mb-16 max-w-[680px] mx-auto">
+          <div className="t6-label text-[#80662c] mb-5">{TIJDLIJN.label}</div>
+          <h2 className="t2-section mb-7">{TIJDLIJN.headline}</h2>
+          <hr className="gold-divider mx-auto mb-7" />
+          <p className="t4-body text-[#2e2622]">{TIJDLIJN.intro}</p>
+        </div>
+        <div ref={ref} className="relative max-w-[1080px] mx-auto">
+          <div
+            aria-hidden
+            className="hidden lg:block absolute top-[14px] left-[10%] right-[10%] h-px bg-gradient-to-r from-[#b08d3e]/0 via-[#b08d3e]/45 to-[#b08d3e]/0"
+          />
+          <div
+            aria-hidden
+            className="lg:hidden absolute top-3 bottom-3 left-[5px] w-px bg-gradient-to-b from-[#b08d3e]/0 via-[#b08d3e]/40 to-[#b08d3e]/0"
+          />
+          <ol className="grid grid-cols-1 lg:grid-cols-3 gap-12 lg:gap-10">
+            {TIJDLIJN.maanden.map((m, i) => (
+              <li
+                key={m.index}
+                className={`scroll-reveal-init relative pl-8 lg:pl-0 ${
+                  inView ? "scroll-reveal-in" : ""
+                }`}
+                style={{ transitionDelay: `${i * 140}ms` }}
+              >
+                <span
+                  aria-hidden
+                  className="absolute left-0 top-[6px] lg:static lg:block w-[11px] h-[11px] rounded-full bg-[#b08d3e] opacity-80 lg:mb-6"
+                />
+                <div className="t6-label text-[#80662c] mb-2">{m.index}</div>
+                <h3
+                  className="font-[family-name:var(--font-heading)] font-bold text-[#3d3228] mb-3"
+                  style={{ fontSize: "clamp(20px, 1.6vw, 24px)", lineHeight: 1.2 }}
+                >
+                  {m.title}
+                </h3>
+                <p className="t4-body text-[#2e2622]" style={{ fontSize: "16px", lineHeight: 1.6 }}>
+                  {m.body}
+                </p>
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
     </section>
   );
@@ -519,14 +675,12 @@ function OverNasra() {
             >
               {NASRA.deepRoseQuote}
             </p>
-            <a
-              href={calendlyUrl("nasra")}
-              target="_blank"
-              rel="noopener noreferrer"
+            <Link
+              href={matchCallHref("nasra")}
               className={`btn-ghost-link inline-flex items-center gap-1 ${EVENT_MATCHCALL}`}
             >
               {NASRA.secondaryCta} <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
           <div ref={ref} className="relative">
             {/* Primary portrait — file: /public/images/nasra-portrait.jpg */}
@@ -601,7 +755,7 @@ function DeTrajecten() {
                     {card.tier}
                   </div>
                   <h3
-                    className="font-[family-name:var(--font-heading)] font-bold mb-3"
+                    className="font-[family-name:var(--font-heading)] font-bold mb-4"
                     style={{
                       fontSize: "clamp(26px, 2.2vw, 32px)",
                       lineHeight: 1.15,
@@ -610,15 +764,6 @@ function DeTrajecten() {
                   >
                     {card.name}
                   </h3>
-                  <p
-                    className="font-[family-name:var(--font-heading)] italic mb-5"
-                    style={{
-                      fontSize: "22px",
-                      color: featured ? "#e2cda0" : "#80662c",
-                    }}
-                  >
-                    {card.price}
-                  </p>
                   <hr
                     className="mb-6"
                     style={{
@@ -651,106 +796,63 @@ function DeTrajecten() {
                       </li>
                     ))}
                   </ul>
+                  {/* Prijs gedempt: substantie leidt, investering sluit af */}
+                  <div className="mt-8 pt-5 border-t border-current/15 flex items-baseline justify-between gap-3">
+                    <span
+                      className="t6-label"
+                      style={{ color: featured ? "#e2cda0" : "#80662c" }}
+                    >
+                      {TRAJECTEN.investeringLabel}
+                    </span>
+                    <span
+                      className="font-[family-name:var(--font-heading)]"
+                      style={{
+                        fontSize: "17px",
+                        color: featured ? "#fbf7f3" : "#3d3228",
+                      }}
+                    >
+                      {card.price}
+                    </span>
+                  </div>
                 </div>
               </div>
               </TiltCard>
             );
           })}
         </div>
+
+        {/* Bewijs op het beslismoment: haar Blueprint, in klantenwoorden */}
+        <div className="mt-16 max-w-[720px] mx-auto bg-[#faf6f0] border border-[#b08d3e]/30 px-8 py-10 lg:px-12">
+          <BewijsBand
+            quote={BEWIJS.prijzen.quote}
+            name={BEWIJS.prijzen.name}
+            context={BEWIJS.prijzen.context}
+          />
+        </div>
         <div className="mt-20 text-center max-w-[720px] mx-auto">
           <p className="t3-quote text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>
           <p className="t4-body text-[#6e6557] mb-12">{TRAJECTEN.closingBody}</p>
-          <a
-            href={calendlyUrl("trajecten")}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={matchCallHref("trajecten")}
             className={`btn-primary-lg ${EVENT_MATCHCALL}`}
           >
             {TRAJECTEN.finalCta}
-          </a>
+          </Link>
         </div>
       </div>
     </section>
   );
 }
 
-/* ─────────────── Testimonials (rustige carousel) ─────────────── */
+/* ─────────────── Testimonials: statisch bewijs, geen carrousel ───────────────
+   Drie verhalen direct zichtbaar op elk formaat (bewijs mag je niet
+   hoeven zoeken), de rest achter een rustige expander. */
 function Testimonials() {
-  const items = TESTIMONIALS.items;
-
-  // Desktop: 4 slides, always 3 cards each.
-  // Last slide wraps around so Fatima (#9) never sits alone.
-  const desktopSlides = useMemo(
-    () => [
-      [items[0], items[1], items[2]],
-      [items[3], items[4], items[5]],
-      [items[6], items[7], items[8]],
-      [items[7], items[8], items[9]], // wrap: overlap with slide 3
-    ],
-    [items]
-  );
-
-  // Mobile: one card per slide (10 slides) — simpler to read on small screens.
-  const mobileSlides = useMemo(() => items.map((t) => [t]), [items]);
-
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-    const mq = window.matchMedia("(max-width: 767px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-
-  const slides = isMobile ? mobileSlides : desktopSlides;
-
-  const [activeRaw, setActive] = useState(0);
-  const [paused, setPaused] = useState(false);
-  const [progressKey, setProgressKey] = useState(0);
-  const touchStartX = useRef<number | null>(null);
-
-  // Clamp active during render (avoids setState-in-effect cascade)
-  const active = activeRaw >= slides.length ? 0 : activeRaw;
-
-  useEffect(() => {
-    if (paused || slides.length <= 1) return;
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      return;
-    }
-    const id = window.setInterval(() => {
-      setActive((a) => (a + 1) % slides.length);
-      setProgressKey((k) => k + 1);
-    }, 7000);
-    return () => window.clearInterval(id);
-  }, [paused, slides.length, active]);
-
-  const go = (next: number) => {
-    setActive(((next % slides.length) + slides.length) % slides.length);
-    setProgressKey((k) => k + 1);
-  };
-
-  const onTouchStart = (e: React.TouchEvent) => {
-    touchStartX.current = e.touches[0].clientX;
-  };
-  const onTouchEnd = (e: React.TouchEvent) => {
-    if (touchStartX.current === null) return;
-    const delta = touchStartX.current - e.changedTouches[0].clientX;
-    if (Math.abs(delta) > 50) {
-      if (delta > 0) go(active + 1);
-      else go(active - 1);
-    }
-    touchStartX.current = null;
-  };
+  const [showAll, setShowAll] = useState(false);
+  const items = showAll ? TESTIMONIALS.items : TESTIMONIALS.items.slice(0, 3);
 
   return (
-    <section
-      id="testimonials"
-      className="relative night-bloom py-28 lg:py-40"
-    >
+    <section id="testimonials" className="relative night-bloom py-28 lg:py-40">
       <div className="velvet-texture" />
       <div className="container-wide relative">
         <div className="text-center mb-16">
@@ -761,190 +863,42 @@ function Testimonials() {
           <h2 className="t2-section text-[#fbf7f3]">{TESTIMONIALS.headline}</h2>
         </div>
 
-        <div
-          className="relative max-w-[1180px] mx-auto"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onTouchStart={onTouchStart}
-          onTouchEnd={onTouchEnd}
-        >
-          {/* Nav buttons (desktop) */}
-          <button
-            type="button"
-            onClick={() => go(active - 1)}
-            aria-label="Vorige testimonials"
-            className="hidden md:flex absolute -left-6 lg:-left-10 top-1/2 -translate-y-[70%] z-10 w-12 h-12 items-center justify-center rounded-full border border-[#c9a854]/60 text-[#e2cda0] bg-[#1a1614]/40 backdrop-blur-sm hover:bg-[#c9a854]/15 hover:border-[#c9a854] transition"
-          >
-            <ArrowRight className="w-4 h-4 rotate-180" />
-          </button>
-          <button
-            type="button"
-            onClick={() => go(active + 1)}
-            aria-label="Volgende testimonials"
-            className="hidden md:flex absolute -right-6 lg:-right-10 top-1/2 -translate-y-[70%] z-10 w-12 h-12 items-center justify-center rounded-full border border-[#c9a854]/60 text-[#e2cda0] bg-[#1a1614]/40 backdrop-blur-sm hover:bg-[#c9a854]/15 hover:border-[#c9a854] transition"
-          >
-            <ArrowRight className="w-4 h-4" />
-          </button>
-
-          {/* Stacked crossfading slides (desktop + mobile, same pattern) */}
-          <div className="relative min-h-[380px] md:min-h-[340px]">
-            {slides.map((slide, sIdx) => (
-              <div
-                key={sIdx}
-                className="carousel-slide absolute inset-0 grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-10"
-                style={{
-                  opacity: active === sIdx ? 1 : 0,
-                  pointerEvents: active === sIdx ? "auto" : "none",
-                }}
-                aria-hidden={active !== sIdx}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 lg:gap-10 max-w-[1180px] mx-auto">
+          {items.map((t) => (
+            <article
+              key={t.name}
+              className="border border-[#c9a854]/30 p-8 lg:p-10 bg-transparent flex flex-col"
+            >
+              <h3
+                className="font-[family-name:var(--font-heading)] italic text-[#e2cda0] mb-4"
+                style={{ fontSize: "16px", letterSpacing: "0.01em" }}
               >
-                {slide.map((t, i) => (
-                  <article
-                    key={`${sIdx}-${t.name}-${i}`}
-                    className="border border-[#c9a854]/30 p-8 lg:p-10 bg-transparent flex flex-col"
-                  >
-                    <h3
-                      className="font-[family-name:var(--font-heading)] italic text-[#e2cda0] mb-4"
-                      style={{ fontSize: "16px", letterSpacing: "0.01em" }}
-                    >
-                      {t.title}
-                    </h3>
-                    <p
-                      className="font-[family-name:var(--font-heading)] italic text-[#fbf7f3] mb-6 flex-1"
-                      style={{ fontSize: "19px", lineHeight: 1.55 }}
-                    >
-                      “{t.quote}”
-                    </p>
-                    <hr
-                      className="mb-4"
-                      style={{
-                        width: 40,
-                        height: 1,
-                        border: 0,
-                        background: "#c9a854",
-                        opacity: 0.6,
-                      }}
-                    />
-                    <div className="t6-label text-[#c9a854]">{t.name}</div>
-                  </article>
-                ))}
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination dots + progress bar */}
-          <div className="flex flex-col items-center gap-4 mt-12">
-            <div className="flex items-center justify-center gap-3">
-              {slides.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => go(i)}
-                  aria-label={`Toon groep ${i + 1}`}
-                  className="w-[6px] h-[6px] rounded-full transition-opacity"
-                  style={{
-                    background: "#c9a854",
-                    opacity: active === i ? 1 : 0.3,
-                  }}
-                />
-              ))}
-            </div>
-            {/* Timer progress bar */}
-            <div className="w-full max-w-[240px] h-[2px] bg-[#c9a854]/20 overflow-hidden">
-              <div
-                key={progressKey}
-                className="h-full bg-[#c9a854] carousel-progress-bar"
-                style={{
-                  animationPlayState: paused ? "paused" : "running",
-                }}
+                {t.title}
+              </h3>
+              <p
+                className="font-[family-name:var(--font-heading)] italic text-[#fbf7f3] mb-6 flex-1"
+                style={{ fontSize: "19px", lineHeight: 1.55 }}
+              >
+                &ldquo;{t.quote}&rdquo;
+              </p>
+              <hr
+                className="mb-4"
+                style={{ width: 40, height: 1, border: 0, background: "#c9a854", opacity: 0.6 }}
               />
-            </div>
-          </div>
+              <div className="t6-label text-[#c9a854]">{t.name}</div>
+            </article>
+          ))}
         </div>
-      </div>
-    </section>
-  );
-}
 
-/* ─────────────── Nieuwsbrief ─────────────── */
-function Nieuwsbrief() {
-  return (
-    <section id="nieuwsbrief" className="py-24 lg:py-32">
-      <div className="container-narrow">
-        <div className="bg-[#faf6f0] border border-[#b08d3e]/40 px-8 md:px-14 py-14 text-center max-w-[640px] mx-auto">
-          <div className="t6-label text-[#80662c] mb-4">{NEWSLETTER.label}</div>
-          <p
-            className="font-[family-name:var(--font-heading)] italic mb-4"
-            style={{ fontSize: "clamp(24px, 2.2vw, 30px)", color: "#3d3228" }}
+        <div className="text-center mt-12">
+          <button
+            type="button"
+            onClick={() => setShowAll((v) => !v)}
+            aria-expanded={showAll}
+            className="btn-outline-gold-light"
           >
-            {NEWSLETTER.headline}
-          </p>
-          <p className="t4-body text-[#2e2622] mb-8">{NEWSLETTER.body}</p>
-          <form
-            name="newsletter"
-            method="POST"
-            data-netlify="true"
-            data-netlify-honeypot="bot-field"
-            action="/thank-you"
-            className="flex flex-col sm:flex-row gap-3 max-w-[480px] mx-auto mb-6"
-          >
-            <input type="hidden" name="form-name" value="newsletter" />
-            <p className="hidden">
-              <label>
-                Laat dit leeg: <input name="bot-field" />
-              </label>
-            </p>
-            <input
-              type="email"
-              name="email"
-              required
-              placeholder={NEWSLETTER.placeholder}
-              className="flex-1 rounded-full border border-[#b08d3e]/60 bg-transparent px-6 py-4 text-[#2e2622] placeholder:text-[#8a8070] focus:outline-none focus:border-[#b08d3e]"
-            />
-            <button type="submit" className="btn-primary">
-              {NEWSLETTER.cta}
-            </button>
-          </form>
-          <p
-            className="font-[family-name:var(--font-heading)] italic text-[#8a8070]"
-            style={{ fontSize: "16px" }}
-          >
-            {NEWSLETTER.signoff}
-          </p>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ─────────────── Instagram (magnetische volg-band) ───────────────
-   Bewust geen nep-tegels: één eerlijke, premium uitnodiging. */
-function InstagramBand() {
-  return (
-    <section className="py-24 lg:py-28">
-      <div className="container-narrow">
-        <div className="relative night-bloom px-8 md:px-14 py-14 md:py-16 text-center overflow-hidden">
-          <div className="velvet-texture" />
-          <GoldCircleIcon
-            aria-hidden
-            className="absolute -right-16 -bottom-24 w-[280px] h-[280px] text-[#c9a854] opacity-20"
-          />
-          <div className="relative">
-            <div className="t6-label text-[#e2cda0] mb-4">{INSTAGRAM.label}</div>
-            <p
-              className="font-[family-name:var(--font-heading)] italic text-[#fbf7f3] mb-8"
-              style={{ fontSize: "clamp(24px, 2.4vw, 32px)" }}
-            >
-              {INSTAGRAM.headline}
-            </p>
-            <a
-              href={INSTAGRAM.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-outline-gold-light"
-            >
-              <InstagramIcon className="w-4 h-4" /> Volg @kartihealth
-            </a>
-          </div>
+            {showAll ? TESTIMONIALS.collapseLabel : TESTIMONIALS.expandLabel}
+          </button>
         </div>
       </div>
     </section>
@@ -965,27 +919,39 @@ function MatchCall() {
           className="mx-auto mb-10"
           style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.8 }}
         />
-        {MATCHCALL.questions.map((q) => (
-          <p
-            key={q}
-            className="font-[family-name:var(--font-heading)] italic text-[#fbf7f3] mb-5"
-            style={{ fontSize: "clamp(20px, 1.8vw, 26px)", lineHeight: 1.5 }}
-          >
-            {q}
-          </p>
-        ))}
+        {/* De-risk in plaats van druk: wat het is, wat het niet is */}
+        <div className="max-w-[620px] mx-auto flex flex-col gap-4 mb-2">
+          {MATCHCALL.derisk.map((line) => (
+            <p
+              key={line}
+              className="t4-body text-[#fbf7f3]"
+              style={{ fontSize: "17px", lineHeight: 1.6 }}
+            >
+              {line}
+            </p>
+          ))}
+        </div>
         <div className="mt-12 mb-5 flex justify-center">
-          <a
-            href={calendlyUrl("final")}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href={matchCallHref("final")}
             className={`btn-primary-lg ${EVENT_MATCHCALL}`}
           >
             {MATCHCALL.cta}
-          </a>
+          </Link>
         </div>
-        <div className="t6-label text-[#e2cda0] mb-20">{MATCHCALL.ctaSub}</div>
-        <div className="pt-4">
+        <div className="t6-label text-[#e2cda0] mb-16">{MATCHCALL.ctaSub}</div>
+
+        {/* Laatste stem vóór de beslissing */}
+        <div className="max-w-[640px] mx-auto border-t border-[#c9a854]/25 pt-12 mb-14">
+          <BewijsBand
+            quote={BEWIJS.final.quote}
+            name={BEWIJS.final.name}
+            context={BEWIJS.final.context}
+            tone="dark"
+          />
+        </div>
+
+        <div>
           {MATCHCALL.closing.map((line) => (
             <p
               key={line}
@@ -1046,7 +1012,18 @@ function Footer() {
         </div>
         <hr className="gold-divider mt-14 mb-6" style={{ width: "100%", opacity: 0.3 }} />
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-[#6e6557]">
-          <span>{FOOTER.legal}</span>
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
+            <span>{FOOTER.legal}</span>
+            {FOOTER.legalLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className="underline decoration-[#b08d3e]/60 underline-offset-4 hover:text-[#3d3228]"
+              >
+                {l.label}
+              </Link>
+            ))}
+          </div>
           <div className="gold-dots-cluster">
             <span />
             <span />
@@ -1065,14 +1042,15 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
+        <BewijsOnderHero />
         <Herkenning />
+        <VanNaar />
         <Methodiek />
         <DeBouwstenen />
         <OverNasra />
         <DeTrajecten />
+        <Tijdlijn />
         <Testimonials />
-        <Nieuwsbrief />
-        <InstagramBand />
         <MatchCall />
       </main>
       <Footer />

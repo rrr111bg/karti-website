@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Council-rapport · Vernieuwde kartihealth.com · 11 juni 2026</title>
+<style>
+  :root {
+    --ink: #1f1b18; --muted: #6e6557; --line: #e6ded2; --bg: #ffffff; --soft: #faf7f2;
+    --contrarian: #8b3a4a; --firstp: #2e2622; --expans: #b08d3e; --outsider: #7a8466; --executor: #4a6072;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; color: var(--ink); background: var(--bg); line-height: 1.6; font-size: 16px; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 24px 80px; }
+  header.top { border-bottom: 1px solid var(--line); padding-bottom: 28px; margin-bottom: 36px; }
+  .kicker { font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+  h1 { font-size: 26px; line-height: 1.25; font-weight: 700; }
+  .vraag { background: var(--soft); border: 1px solid var(--line); border-radius: 10px; padding: 18px 22px; margin-top: 18px; font-size: 15px; color: #3d3228; }
+  h2 { font-size: 20px; margin: 40px 0 14px; padding-top: 8px; }
+  h3 { font-size: 16px; margin: 22px 0 8px; }
+  p { margin-bottom: 12px; }
+  ul, ol { margin: 0 0 14px 22px; }
+  li { margin-bottom: 8px; }
+  .verdict { border: 1px solid var(--line); border-left: 4px solid var(--expans); border-radius: 10px; padding: 26px 28px; background: #fffdf9; }
+  .verdict h2:first-child { margin-top: 0; }
+  .badge { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; background: #f4ece0; color: #80662c; margin-bottom: 14px; }
+  .one-thing { background: #2e2622; color: #fbf7f3; border-radius: 10px; padding: 22px 26px; margin-top: 22px; }
+  .one-thing .kicker { color: #e2cda0; }
+  .one-thing p { color: #fbf7f3; }
+  table.matrix { width: 100%; border-collapse: collapse; margin: 16px 0 8px; font-size: 14px; }
+  .matrix th, .matrix td { border: 1px solid var(--line); padding: 9px 10px; text-align: center; vertical-align: middle; }
+  .matrix th { background: var(--soft); font-weight: 600; font-size: 13px; }
+  .matrix td.thema { text-align: left; font-weight: 500; }
+  .dot { display: inline-block; width: 11px; height: 11px; border-radius: 999px; }
+  .legend { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
+  .advisor-pos { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin: 16px 0; }
+  .pos-card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; font-size: 13px; background: #fff; border-top: 3px solid var(--line); }
+  .pos-card b { display: block; font-size: 13px; margin-bottom: 4px; }
+  details { border: 1px solid var(--line); border-radius: 10px; margin-bottom: 10px; background: #fff; }
+  summary { cursor: pointer; padding: 14px 18px; font-weight: 600; font-size: 15px; list-style: none; display: flex; align-items: center; gap: 10px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; margin-left: auto; color: var(--muted); font-size: 18px; }
+  details[open] summary::after { content: "–"; }
+  details .body { padding: 0 18px 18px; font-size: 15px; color: #2c2722; white-space: pre-line; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--muted); }
+  .c-contrarian { border-top-color: var(--contrarian); } .s-contrarian .dot, .dot.contrarian { background: var(--contrarian); }
+  .c-firstp { border-top-color: var(--firstp); } .dot.firstp { background: var(--firstp); }
+  .c-expans { border-top-color: var(--expans); } .dot.expans { background: var(--expans); }
+  .c-outsider { border-top-color: var(--outsider); } .dot.outsider { background: var(--outsider); }
+  .c-executor { border-top-color: var(--executor); } .dot.executor { background: var(--executor); }
+  .dot.empty { background: transparent; border: 1px solid var(--line); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <div class="kicker">LLM Council · 5 adviseurs · 5 peer-reviews · 1 voorzitter</div>
+  <h1>Feedback op de vernieuwde kartihealth.com (preview, vóór livegang)</h1>
+  <div class="vraag"><strong>De vraag:</strong> Geef kritische feedback op de vernieuwde website van Karti. Wat is sterk, wat is zwak, wat ontbreekt, en wat moet eerst? Context: premium 1:1 coaching vrouwengezondheid door Nasra (HBO-verpleegkundige); bezoekers via TikTok/Instagram in-app browsers; enige taak: de gratis 15-min match-call laten boeken; aanbod €295 / €1.400 / €3.000.</div>
+</header>
+
+<section class="verdict">
+  <span class="badge">Oordeel van de voorzitter</span>
+
+  <h2>Waar de council het eens is</h2>
+  <ol>
+    <li><strong>De laatste meter is de zwakste schakel.</strong> Vier van de vijf adviseurs landen onafhankelijk op het boekingsmoment: alles vóór de klik is geoptimaliseerd, daarna een kale Engelstalige Calendly in een nieuwe tab van een wispelturige in-app browser. CTA's zeggen "match-call", het Calendly-event heet "Kennismaking", de €295-sessie bevat óók een kennismakingsgesprek, en het woord <strong>"gratis" staat nergens</strong>. De bezoekster vermoedt een verkooppraatje voor €1.400.</li>
+    <li><strong>Het bewijs is begraven.</strong> Tien sterke testimonials, op mobiel één zichtbaar achter tien dots, zonder gezicht of verifieerbare details, op positie 7.</li>
+    <li><strong>Niets is end-to-end getest.</strong> Geen echte boeking vanuit de TikTok/Instagram-app, nieuwsbrief nooit gesubmit, Plausible-account bestaat nog niet.</li>
+    <li><strong>De richting is goed.</strong> Niemand wil terug: hero-copy, CTA boven de vouw, sticky balk, zichtbare prijzen en UTM-tagging worden door alle vijf als sterk fundament benoemd. De site moet niet opnieuw ontworpen, hij moet afgemaakt.</li>
+  </ol>
+  <p><strong>Apart geval:</strong> het juridische blok (footer "Privacy · Voorwaarden" zonder werkende pagina's → 404, e-mailcapture zonder privacybeleid, €3.000-trajecten zonder voorwaarden, genezingsclaims naast "geen medische zorg") werd door één adviseur gevonden maar door alle vijf reviewers unaniem als zwaarste bevinding aangewezen. Eén vinder, vijf bevestigers: dat telt als consensus.</p>
+
+  <h2>Waar de council botst</h2>
+  <ul>
+    <li><strong>Nieuwsbrief: asset of lek.</strong> Expansionist: elke niet-boekende bezoekster is verloren, bouw de capture uit. First Principles: de band vlak voor de eind-CTA is een schuldvrije exit. De briefing beslist (enige taak = match-call): First Principles wint vóór livegang; het groeipunt blijft geldig voor later, ónder de eind-CTA en pas mét privacybeleid.</li>
+    <li><strong>Schaarste: premium of druk.</strong> Expansionist wil eerlijke schaarste; de Outsider ervaart de bestaande urgentie-copy al als funneldruk. Voor een doelgroep met als grootste angst "verkocht worden" weegt de Outsider zwaarder: druk weghalen, niet toevoegen.</li>
+    <li><strong>Elementenprofiel: kroonjuweel of geloofwaardigheidsbreuk.</strong> Quiz-imperium (Expansionist) versus "botst frontaal met HBO-verpleegkundige" (Outsider). Resolutie: niet schrappen, wel uitleggen of lager zetten; zeker niet uitvergroten zolang het onuitgelegd is.</li>
+    <li><strong>Nu mergen of eerst blokkades.</strong> Executor: mergen kan vandaag met checklist. Contrarian: drie blokkades eerst. Asymmetrische downside wint: de volgorde van de Contrarian met de discipline van de Executor erin.</li>
+  </ul>
+
+  <h2>Blinde vlekken die de council ving</h2>
+  <ul>
+    <li><strong>Het feitenconflict over de sticky balk.</strong> Executor: niet in de uitgeserveerde HTML. Feitencheck: de balk bestaat, rendert bewust client-side na 65% scroll (in-app browsers draaien JavaScript). Waarneming klopte, conclusie niet. De les blijft: de belangrijkste mobiele CTA hangt af van JS + scroll-event in precies de omgeving die niemand op een echt toestel zag.</li>
+    <li><strong>Performance is nooit gemeten</strong> (4 van 5 reviews). WebGL laadt bewust nooit in-app en initial JS is ~140KB gzip, maar laadtijd op 4G in een TikTok-webview blijft ongemeten.</li>
+    <li><strong>Niemand keek in de Calendly-agenda zelf:</strong> lege of verre beschikbaarheid breekt vertrouwen op het allerlaatste scherm. Plus: telefoonnummer verplicht en reminders tegen no-shows.</li>
+    <li><strong>Vijf expert-simulaties, nul gebruikers:</strong> drie echte doelgroepvrouwen één uur laten boeken beslecht de halve discussielijst.</li>
+  </ul>
+
+  <h2>De aanbeveling</h2>
+  <p><strong>Niet live vandaag. Wel live deze week.</strong> De fixlijst in volgorde:</p>
+  <ol>
+    <li><strong>Juridische laag (blokkade):</strong> privacy- en voorwaardenpagina's live, footer-links werkend; claims herformuleren ("Lab analyse", "Medische deep dive", genezings-testimonials naast de disclaimer).</li>
+    <li><strong>Het beslismoment (blokkade):</strong> Calendly hernoemen naar "Gratis match-call · 15 minuten" (NL, branded); drie regels die de call de-risken (wat gebeurt er, wat niet, geen verplichting); "gratis" bij elke CTA; "eerlijk" schrappen.</li>
+    <li><strong>De bewijstest (blokkade):</strong> Plausible-account + Calendly-agenda gevuld, telefoonnummer verplicht, reminders 24u/1u; dán de end-to-end test vanuit TikTok én Instagram met testboeking en UTM-check.</li>
+    <li><strong>Bewijs zichtbaar:</strong> drie testimonials statisch op mobiel (onder hero, bij prijzen, bij eind-CTA); kies de drie zonder medische claims.</li>
+    <li><strong>Consistentie buiten de site:</strong> brochure en DM-templates naar €295 / €1.400 / €3.000, dag één.</li>
+    <li><strong>Nieuwsbrief- en Instagram-band onder de eind-CTA</strong>, of weg voor launch.</li>
+  </ol>
+  <p><strong>Week één na livegang:</strong> video van Nasra (pipeline staat al), drie doelgroepvrouwen laten boeken terwijl je meekijkt, mini-FAQ, Elementenprofiel uitleggen. <strong>Niet doen:</strong> WebGL-tweaks, Calendly-embed, secties herschikken, quiz/leadmagneet vóór de privacylaag, schaarste-copy.</p>
+
+  <div class="one-thing">
+    <div class="kicker">Het ene ding dat je eerst moet doen</div>
+    <p>Pak vanmiddag een telefoon, zet de preview-link in een TikTok-bio, en boek zelf één match-call van eerste scroll tot bevestigingsmail. Dit is de enige stap die nieuwe informatie oplevert die de rest van de lijst nog kan veranderen; al het andere is bekende uitvoering.</p>
+  </div>
+</section>
+
+<h2>Hoe de adviseurs zich verhouden</h2>
+<div class="legend">Positie per adviseur over livegang:</div>
+<div class="advisor-pos">
+  <div class="pos-card c-contrarian"><b>Contrarian</b>Niet live: 3 blokkades (juridisch, beslismoment, test)</div>
+  <div class="pos-card c-firstp"><b>First Principles</b>Eerst de laatste meter de-risken, dan live</div>
+  <div class="pos-card c-expans"><b>Expansionist</b>Live; daarna 3 groeimotoren aanzetten</div>
+  <div class="pos-card c-outsider"><b>Outsider</b>Half vertrouwen: fix "gratis", jargon en bewijs</div>
+  <div class="pos-card c-executor"><b>Executor</b>Mergen kan, met checklist van 4 punten</div>
+</div>
+
+<div class="legend">Wie signaleerde welk thema (gevulde stip = expliciet benoemd):</div>
+<table class="matrix">
+  <tr><th style="text-align:left">Thema</th><th>Contr.</th><th>First P.</th><th>Expans.</th><th>Outsider</th><th>Exec.</th></tr>
+  <tr><td class="thema">Beslismoment / Calendly-overgang zwak</td><td><span class="dot contrarian"></span></td><td><span class="dot firstp"></span></td><td><span class="dot empty"></span></td><td><span class="dot outsider"></span></td><td><span class="dot executor"></span></td></tr>
+  <tr><td class="thema">"Gratis" ontbreekt / angst voor verkooppraatje</td><td><span class="dot contrarian"></span></td><td><span class="dot firstp"></span></td><td><span class="dot empty"></span></td><td><span class="dot outsider"></span></td><td><span class="dot empty"></span></td></tr>
+  <tr><td class="thema">Testimonials begraven / zonder gezicht</td><td><span class="dot contrarian"></span></td><td><span class="dot firstp"></span></td><td><span class="dot expans"></span></td><td><span class="dot outsider"></span></td><td><span class="dot empty"></span></td></tr>
+  <tr><td class="thema">Juridisch: 404 privacy/voorwaarden, claims</td><td><span class="dot contrarian"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td></tr>
+  <tr><td class="thema">End-to-end test in echte in-app browser nodig</td><td><span class="dot contrarian"></span></td><td><span class="dot firstp"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot executor"></span></td></tr>
+  <tr><td class="thema">Video van Nasra als vertrouwensdrager</td><td><span class="dot empty"></span></td><td><span class="dot firstp"></span></td><td><span class="dot expans"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td></tr>
+  <tr><td class="thema">Prijzen elders (brochure/DM) nog oud</td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot executor"></span></td></tr>
+  <tr><td class="thema">Elementenprofiel: spanning medisch vs spiritueel</td><td><span class="dot empty"></span></td><td><span class="dot empty"></span></td><td><span class="dot expans"></span></td><td><span class="dot outsider"></span></td><td><span class="dot empty"></span></td></tr>
+</table>
+
+<h2>Volledige adviezen (uitklapbaar)</h2>
+
+<details><summary><span class="dot contrarian"></span> De Contrarian · "Niet live zonder juridische laag"</summary><div class="body">De fatale fout zit niet in het design, maar in het fundament: de site verkoopt vertrouwen en heeft juridisch niets. "Privacy · Voorwaarden" in de footer is dode tekst; /privacy en /voorwaarden geven 404. Je verzamelt e-mails zonder privacybeleid (AVG-overtreding) en verkoopt trajecten tot €3.000 zonder algemene voorwaarden, terwijl de site "Lab analyse: volledige hormonale screening" en "Medische deep dive" belooft naast de disclaimer "geen medische zorg", met testimonials die genezing claimen ("eczeem verdween", "Nasra ziet wat artsen missen"). Eén kritische bezoeker of één geschil en dit wordt duur.
+
+Tweede breuk: het boekingsmoment zelf. Alle zeven CTA's zeggen "match-call", maar het Calendly-event heet "Kennismaking", én de €295 Inzicht Sessie bevat een "kennismakingsgesprek". Is de call nu gratis of betaald? Precies op het beslismoment ontstaat verwarring, plus een stijlbreuk naar kale Calendly via target="_blank" in wispelturige TikTok/IG in-app browsers. Niemand heeft de funnel aantoonbaar end-to-end getest; ook de nieuwsbrief is nooit echt geverifieerd.
+
+Derde: het bewijs is verstopt. Tien testimonials, op mobiel één zichtbaar achter tien dots; nul bezwaarafhandeling, geen FAQ voor een €1.400-beslissing.
+
+Sterk: hero-copy, CTA boven de vouw, sticky balk, UTM-tagging, nette WebGL-fallback. Maar dat is glazuur.
+
+Vóór livegang: (1) privacy- en voorwaardenpagina's live en gelinkt; (2) Calendly hernoemen naar "Match-call · 15 minuten" en de funnel testen vanuit TikTok zelf; (3) minimaal drie testimonials statisch zichtbaar op mobiel. Zonder punt 1 en 2 zou ik dit niet live zetten.</div></details>
+
+<details><summary><span class="dot firstp"></span> De First Principles Thinker · "Breek het meegebrachte vertrouwen niet"</summary><div class="body">De baan van deze site is niet "vertrouwen opbouwen". De bezoeker arriveert mét vertrouwen; ze zag net een video van Nasra die haar raakte. De baan is: dat vertrouwen niet breken in de 60 seconden tot de boeking.
+
+Eén: de conversie gebeurt niet op deze site. Elke CTA opent met target="_blank" een kale Calendly-pagina in een TikTok/Instagram-webview, waar nieuwe tabs onvoorspelbaar zijn. Elke pixel vóór de klik is geoptimaliseerd en nul woorden besteed aan wat ze ná de klik ziet. De zwakste schakel is onbeheerd derde-partij-territorium.
+
+Twee: het product van deze pagina is de match-call, niet de Guide; maar de match-call wordt nergens verkocht. "15 minuten · vrijblijvend · eerlijk" is een belofte zonder inhoud. Haar echte angst: een verkooppraatje. Drie regels die dat bezwaar wegnemen ontbreken.
+
+Drie: het medium dat het vertrouwen bouwde ontbreekt. Ze kent Nasra bewegend, pratend, in kleur; de site antwoordt met een zwart-wit portret en tien tekst-testimonials zonder gezicht. En de nieuwsbrief- plus Instagram-band geven de twijfelaar vlak voor de finale CTA een schuldvrije exit.
+
+Sterk: herkenningssectie, "Ik start niet bij je hormonen", sticky CTA, trustregel, UTM-tagging.
+
+Vóór livegang: de laatste meter. Mini-sectie die de match-call de-riskt + Calendly Nederlands/branded + de hele flow zelf testen in de TikTok- én Instagram-app. Direct erna: video van Nasra op de site.</div></details>
+
+<details><summary><span class="dot expans"></span> De Expansionist · "Drie groeimotoren staan uit"</summary><div class="body">1. Nasra zelf is het onderbenutte asset. Al het verkeer komt via TikTok/IG waar vrouwen verliefd worden op haar gezicht, stem en toon; de site vangt dat op met een zwart-wit stilstaande foto. Eén talking-head video van 45 seconden verlengt het parasociale vertrouwen dat de bezoeker méébrengt; de reel-pipeline staat al. Goedkoopste conversie-vermenigvuldiger die er is.
+
+2. Het Elementenprofiel is een verstopt leadmagneet-imperium. "Welk element ben jij?" als mini-quiz (TikTok-CTA → quiz → resultaat → e-mail + match-call) maakt van de brochure een funnel en voedt de nieuwsbrief, die nu als wegwerpsectie onderaan staat terwijl elke niet-boekende bezoeker volledig verloren is.
+
+3. De testimonials zijn goud, begraven in een carrousel op positie 7. "Mijn huisarts zei dat mijn bloedwaarden 'prima' waren. Nasra zag in één gesprek waar het werkelijk zat" is de hele positionering in klantenwoorden. Til de drie sterkste eruit: onder de hero, naast de €1.400-kaart, bij de eind-CTA.
+
+Bonus: toon de Blueprint fysiek (gemockt document = bewijs én begeerte; voorbeeldhoofdstuk = tweede leadmagneet) en benoem eerlijke schaarste ("beperkt aantal trajecten per maand").
+
+[Noot van de council: de peer-review wees dit advies unaniem aan als grootste blinde vlek voor déze vraag: het mist de risicolaag en bouwt extra exits vóór de boeking. Bewaren voor week twee, na de privacylaag.]</div></details>
+
+<details><summary><span class="dot outsider"></span> De Outsider · "Is dit gratis? Is dit medisch of spiritueel?"</summary><div class="body">Eerste 3 seconden: crèmekleurig, goud, serif; dit oogt als een duur wellnessmerk voor vrouwen. "Jouw lichaam fluistert. Ik leer je luisteren" is mooi maar vertelt níet wat dit is; pas bij "1:1 begeleiding door Nasra · HBO-verpleegkundige" valt het kwartje, en welke klacht ze oplost ontdek je pas na scrollen.
+
+Wat ik niet begrijp: "match-call", een verzonnen woord, drie keer in beeld vóór enige uitleg. Is dat een verkoopgesprek? Cruciaal: nergens staat het woord "gratis". "Vrijblijvend · eerlijk" is niet hetzelfde en "eerlijk" maakt juist achterdochtig. Jargonstapel: "The Embodiment Blueprint", "Body & Being Guide", "Fasekeuken", "deep dive". Het "Elementenprofiel: water, vuur, aarde of lucht" botst frontaal met "HBO-verpleegkundige": is dit medisch of spiritueel? Bij €3.000 staat "Lab analyse" en "detoxprotocol": wie voert dat uit?
+
+Vertrouwen: half. Design en echte foto wekken vertrouwen; prijzen zonder termijnen of garantie niet; testimonials alleen voornamen zonder gezicht; "De huisarts zag niks" klinkt als anti-dokter-retoriek; de slotvraag voelt als salesfunnel-druk. Wat mij tegenhoudt: ik vermoed dat de match-call een pitch voor €1.400+ is.
+
+Veranderen: "Gratis kennismaking · 15 min" letterlijk bij elke CTA en schrap "eerlijk"; één concrete klachtenzin in de hero; mini-blok "Zo werkt de match-call"; Elementenprofiel uitleggen of lager zetten; foto's of verifieerbare details bij testimonials.</div></details>
+
+<details><summary><span class="dot executor"></span> De Executor · "Mergen kan, in deze volgorde"</summary><div class="body">Mergen kan, maar in deze volgorde, en drie dingen eerst. De basis staat: één taak, scherpe copy, prijzen zichtbaar, Calendly-link geeft 200, CTA's netjes getagd.
+
+1. Vandaag, vóór de merge: Plausible-account aanmaken (10 minuten). Zonder account is elke klik vanaf dag één voorgoed weg.
+2. Vandaag: brochure en DM-templates naar nieuwe prijzen. Site zegt €1.400, de opvolging zegt €1.800; één tegenstrijdig prijskaartje ná de match-call kost precies de boeking die de site net binnenhaalde.
+3. Vóór de merge: één echte test op een telefoon via een TikTok-bio-link, doorklikken tot een echte testboeking in de in-app browser. [Feitencheck council: de sticky balk en zesde UTM bestaan, maar renderen bewust client-side na scroll; de test op een echt toestel blijft het bewijs.]
+4. In Calendly (30 minuten): telefoonnummer verplicht plus reminders 24 uur en 1 uur vooraf. No-shows op gratis calls zijn het grootste lek in dit pad, niet de website.
+
+Overbodig: verder sleutelen aan de WebGL-hero, een Calendly-embed bouwen, secties herschikken. Nul extra boekingen.
+
+Meetbaar deze week: Plausible live op dag één betekent dat je na zeven dagen wéét welke CTA boekt.</div></details>
+
+<h2>Peer-review hoogtepunten (uitklapbaar)</h2>
+<details><summary>Wat de tweede ronde opleverde</summary><div class="body">Unaniem oordeel (5/5 reviewers): het advies van de Contrarian is het sterkste (harde, falsifieerbare launch-blockers: 404's, claims, gratis-of-betaald-verwarring); het advies van de Expansionist heeft de grootste blinde vlek (beantwoordt "hoe groeien we" in plaats van "wat breekt nu", en zijn voorstellen verergeren gevonden problemen: een quiz die e-mails verzamelt zonder privacybeleid, het uitvergroten van de huisarts-testimonial die anderen als risico markeren).
+
+Door alle vijf adviseurs gemist en pas in review gevangen:
+• Laadtijd in TikTok/IG-webviews op 4G is nooit gemeten; traagheid komt vóór elke copyfix.
+• Niemand keek in de Calendly-agenda zelf (beschikbaarheid, tijdzone, no-show-instellingen).
+• Feitenconflict: de Executor vond de sticky balk niet in de uitgeserveerde HTML terwijl anderen hem prezen. Feitencheck: bewust client-side gerenderd na scroll; werkt, maar bewijs op een echt toestel ontbreekt nog.
+• Vijf expert-simulaties, nul echte gebruikers: drie doelgroepvrouwen laten boeken terwijl je meekijkt beslecht de halve discussielijst.</div></details>
+
+<footer>
+  Council-sessie · 11 juni 2026, 10:48 · Onderwerp: vernieuwde kartihealth.com (branch upgrade-2026-06, preview-deploy) · 5 adviseurs, 5 anonieme peer-reviews, 1 voorzitter · Volledig transcript: council-transcript-20260611-1048.md
+</footer>
+
+</div>
+</body>
+</html>

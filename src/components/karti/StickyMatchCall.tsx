@@ -1,7 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
-import { HERO, calendlyUrl } from "@/lib/content";
+import { HERO } from "@/lib/content";
 import { ArrowRight } from "@/components/icons";
 
 /**
@@ -44,14 +45,12 @@ export function StickyMatchCall() {
 
   return (
     <div className="sticky-cta">
-      <a
-        href={calendlyUrl("sticky")}
-        target="_blank"
-        rel="noopener noreferrer"
+      <Link
+        href="/match-call?utm_content=sticky"
         className="plausible-event-name=matchcall-click"
       >
         {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
-      </a>
+      </Link>
     </div>
   );
 }
