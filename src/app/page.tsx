@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Fragment, useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState, type CSSProperties } from "react";
 import {
   MenuIcon,
   CloseIcon,
@@ -40,6 +40,7 @@ import {
   FOOTER,
 } from "@/lib/content";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import { voorkomWees } from "@/lib/tekst";
 import { RootsVisual } from "@/components/karti/RootsVisual";
 import { StickyMatchCall } from "@/components/karti/StickyMatchCall";
 import { TiltCard } from "@/components/karti/TiltCard";
@@ -202,8 +203,9 @@ function Hero() {
       />
 
       <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
-        {/* Content: waardepropositie + CTA, mobiel als eerste in beeld */}
-        <div className="max-w-[660px] min-w-0">
+        {/* Content: waardepropositie + CTA, mobiel als eerste in beeld;
+            mobiel gecentreerd, desktop links-editorial */}
+        <div className="max-w-[660px] min-w-0 mx-auto lg:mx-0 text-center lg:text-left">
           <div className="t6-label text-[#80662c] mb-6 hero-enter-item" style={enter(0)}>
             {HERO.label}
           </div>
@@ -216,31 +218,34 @@ function Hero() {
               {HERO.headline[1]}
             </span>
           </h1>
-          <hr className="gold-divider gold-divider-enter my-7" style={enter(300)} />
+          <hr className="gold-divider gold-divider-enter my-7 mx-auto lg:mx-0" style={enter(300)} />
           <p className="t3-quote text-[#3d3228] mb-9 hero-enter-item" style={enter(380)}>
             {pullHead}
             <span style={{ color: "#8b3a4a" }}>{accent}</span>
           </p>
           <div
-            className="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-4 hero-enter-item"
+            className="flex flex-col items-center lg:items-start sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start sm:items-center gap-4 hero-enter-item"
             style={enter(470)}
           >
-            <MagneticButton>
+            <MagneticButton className="w-full sm:w-auto">
               <Link
                 href={matchCallHref("hero")}
-                className={`btn-primary-lg ${EVENT_MATCHCALL}`}
+                className={`btn-primary-lg w-full sm:w-auto ${EVENT_MATCHCALL}`}
               >
                 {HERO.primaryCta} <ArrowRight className="w-4 h-4" />
               </Link>
             </MagneticButton>
-            <a href="#methode" className="btn-outline-gold">
+            <a href="#methode" className="btn-outline-gold w-full sm:w-auto">
               {HERO.secondaryCta}
             </a>
           </div>
           <div className="t6-label text-[#6e6557] mt-5 hero-enter-item" style={enter(550)}>
             {HERO.ctaSub}
           </div>
-          <div className="flex items-center gap-3 mt-9 hero-enter-item" style={enter(630)}>
+          <div
+            className="flex items-center justify-center lg:justify-start gap-3 mt-9 hero-enter-item"
+            style={enter(630)}
+          >
             <span className="gold-dot" aria-hidden />
             <span className="t4-body text-[#2e2622]" style={{ fontSize: "15px" }}>
               {HERO.trustLine}
@@ -332,7 +337,7 @@ function Methodiek() {
                       {p.title}
                     </h3>
                     <p className="t4-body text-[#2e2622]" style={{ fontSize: "16px", lineHeight: 1.6 }}>
-                      {p.body}
+                      {voorkomWees(p.body)}
                     </p>
                   </div>
                 </li>
@@ -418,7 +423,7 @@ function BewijsBand({
           color: dark ? "#fbf7f3" : "#3d3228",
         }}
       >
-        &ldquo;{quote}&rdquo;
+        &ldquo;{voorkomWees(quote)}&rdquo;
       </p>
       <div className="mt-5">
         {/* dot ín de tekstflow: blijft aan de naam geplakt, ook bij wrap */}
@@ -467,12 +472,15 @@ function VanNaar() {
             exact even hoog. De gouden draad ontwart zich van NU naar STRAKS. */}
         <div ref={ref} className="vannaar-grid max-w-[880px] mx-auto">
           {VAN_NAAR.paren.map((paar, i) => (
-            <Fragment key={paar.van}>
+            <div key={paar.van} className="vn-paar">
               <div
                 className={`vn-cel vn-nu scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
                 style={{ transitionDelay: `${i * 130}ms` }}
               >
-                <p>{paar.van}</p>
+                <p>
+                  <span className="vn-mini vn-mini-nu">Nu</span>
+                  {voorkomWees(paar.van)}
+                </p>
               </div>
               <div
                 className={`vn-connector scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
@@ -484,9 +492,12 @@ function VanNaar() {
                 className={`vn-cel vn-straks scroll-reveal-init ${inView ? "scroll-reveal-in" : ""}`}
                 style={{ transitionDelay: `${i * 130 + 90}ms` }}
               >
-                <p>{paar.naar}</p>
+                <p>
+                  <span className="vn-mini vn-mini-straks">Straks</span>
+                  {voorkomWees(paar.naar)}
+                </p>
               </div>
-            </Fragment>
+            </div>
           ))}
         </div>
       </div>
@@ -540,7 +551,7 @@ function Tijdlijn() {
                   {m.title}
                 </h3>
                 <p className="t4-body text-[#2e2622]" style={{ fontSize: "16px", lineHeight: 1.6 }}>
-                  {m.body}
+                  {voorkomWees(m.body)}
                 </p>
               </li>
             ))}
@@ -609,7 +620,7 @@ function BouwsteenCard({
         }}
       />
       <p className="t4-body text-[#2e2622]" style={{ fontSize: "17px" }}>
-        {card.body}
+        {voorkomWees(card.body)}
       </p>
     </article>
   );
@@ -946,7 +957,7 @@ function MatchCall() {
               className="t4-body text-balance text-[#fbf7f3]"
               style={{ fontSize: "17px", lineHeight: 1.6 }}
             >
-              {line}
+              {voorkomWees(line)}
             </p>
           ))}
         </div>

@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { CalendlyEmbed } from "@/components/karti/CalendlyEmbed";
 import { CALENDLY_URL, HERO, MATCHCALL_PAGE } from "@/lib/content";
+import { voorkomWees } from "@/lib/tekst";
 
 export const metadata: Metadata = {
   title: "Gratis match-call · 15 minuten · Karti",
@@ -65,7 +66,7 @@ export default async function MatchCallPage({
                       {i + 1}
                     </span>
                     <span className="t4-body text-[#2e2622]" style={{ fontSize: "17px" }}>
-                      {stap}
+                      {voorkomWees(stap)}
                     </span>
                   </li>
                 ))}

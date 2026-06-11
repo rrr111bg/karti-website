@@ -62,6 +62,10 @@
     color: #2e2622;
     background: #f2eae0;
     scroll-behavior: smooth;
+    /* Wereldwijd slot tegen horizontale overflow (witte strook rechts op
+       echte telefoons). clip i.p.v. hidden: maakt géén scroll-container,
+       dus position:sticky blijft gewoon werken. */
+    overflow-x: clip;
   }
   body {
     color: #2e2622;
@@ -260,12 +264,21 @@
     border: none;
   }
   .btn-primary-lg:hover { background: #9a7a35; }
-  /* smaller op kleine schermen zodat de CTA op één regel blijft */
-  @media (max-width: 420px) {
+  /* Compact over de HELE mobiele range (t/m 639px): de niet-afbreekbare
+     CTA paste anders niet op 421-639px brede toestellen en duwde de
+     pagina 13px open (witte strook rechts op o.a. iPhone Pro Max). */
+  @media (max-width: 639px) {
     .btn-primary-lg {
       font-size: 13px;
-      letter-spacing: 0.15em;
-      padding: 18px 34px;
+      letter-spacing: 0.12em;
+      padding: 18px 28px;
+    }
+  }
+  @media (max-width: 374px) {
+    .btn-primary-lg {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 16px 22px;
     }
   }
 
@@ -483,6 +496,13 @@
     border-radius: 9999px;
     box-shadow: 0 18px 44px -16px rgba(26, 22, 20, 0.5);
   }
+  @media (max-width: 374px) {
+    .sticky-cta a {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      padding: 15px 16px;
+    }
+  }
   @media (min-width: 768px) {
     .sticky-cta { display: none; }
   }
@@ -618,25 +638,55 @@
   }
   @media (min-width: 640px) { .vn-connector { height: auto; } }
   .ontwar { width: 64px; height: 24px; }
-  /* Mobiel: eenvoudiger en doeltreffender — de NU-regel wordt een kale,
-     gecentreerde fluistering; alleen STRAKS blijft een card. */
+  /* Paar-wrapper: op desktop onzichtbaar voor het grid (display:contents),
+     op mobiel wordt het paar één rustige kaart — optie A. */
+  .vn-paar { display: contents; }
+  .vn-mini {
+    display: none;
+    font-family: var(--font-label), "Work Sans", ui-sans-serif, system-ui, sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .vn-mini-nu { color: #8a8070; }
+  .vn-mini-straks { color: #80662c; }
+
   @media (max-width: 639px) {
-    .vannaar-grid { row-gap: 6px; }
-    .vn-cel { min-height: 0; }
-    .vn-nu {
+    .vannaar-grid { row-gap: 0; }
+    .vn-paar {
+      display: block;
+      background: #faf6f0;
+      border: 1px solid rgba(176, 141, 62, 0.35);
+      padding: 24px 20px;
+      text-align: center;
+    }
+    .vn-paar + .vn-paar { margin-top: 18px; }
+    .vn-mini { display: block; }
+    .vn-cel {
+      display: block;
+      height: auto;
+      min-height: 0;
       border: 0;
       background: transparent;
-      padding: 4px 8px;
-      justify-content: center;
+      padding: 0;
     }
-    .vn-nu p { text-align: center; font-size: 15px; }
-    .vn-straks {
-      padding: 16px 20px;
-      justify-content: center;
+    .vn-nu p {
+      text-align: center;
+      font-size: 15px;
+      color: #6e6557;
     }
-    .vn-straks p { text-align: center; }
-    .vannaar-grid .vn-straks:not(:last-child) { margin-bottom: 24px; }
+    .vn-connector { height: 30px; margin: 4px 0; }
     .ontwar { transform: rotate(90deg) scale(0.65); }
+    .vn-straks p {
+      text-align: center;
+      font-family: var(--font-heading), "Lora", ui-serif, Georgia, serif;
+      font-weight: 700;
+      font-size: 19px;
+      line-height: 1.35;
+      color: #2e2622;
+    }
   }
   html.js .ontwar-path {
     stroke-dasharray: 84;
@@ -788,6 +838,10 @@
     transform-origin: left center;
     animation: divider-grow 800ms var(--ease-organic) forwards;
     animation-delay: var(--enter-delay, 260ms);
+  }
+  /* mobiel is de hero gecentreerd: divider groeit dan vanuit het midden */
+  @media (max-width: 1023px) {
+    html.js .gold-divider-enter { transform-origin: center; }
   }
 
   /* Subtle image scale-on-reveal */
