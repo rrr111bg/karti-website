@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useScroll } from "motion/react";
 
 /**
  * De gouden scroll-draad: een verticale lijn in de linkermarge die zich
@@ -11,11 +12,14 @@ import { useEffect, useRef, useState } from "react";
  * - Goud werkt op zowel Sandstone als Night Bloom, dus geen blend-modes.
  * - reduced-motion: CSS verbergt dot en vullijn, de statische track blijft.
  * - Puur decoratief: aria-hidden, pointer-events none.
+ * - Voortgang via Motion useScroll (geen window scroll-listener); de
+ *   waarde loopt buiten de React-render om via de --p custom property.
  */
 export function ScrollThread() {
   const fillRef = useRef<HTMLDivElement>(null);
   const dotRef = useRef<HTMLDivElement>(null);
   const [ticks, setTicks] = useState<number[]>([]);
+  const { scrollYProgress } = useScroll();
 
   // sectie-ticks: posities van de genummerde secties op de scroll-as
   useEffect(() => {
@@ -42,24 +46,13 @@ export function ScrollThread() {
   }, []);
 
   useEffect(() => {
-    let raf = 0;
-    const onScroll = () => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const max =
-          document.documentElement.scrollHeight - window.innerHeight;
-        const p = max > 0 ? window.scrollY / max : 0;
-        fillRef.current?.style.setProperty("--p", p.toFixed(4));
-        dotRef.current?.style.setProperty("--p", p.toFixed(4));
-      });
+    const apply = (p: number) => {
+      fillRef.current?.style.setProperty("--p", p.toFixed(4));
+      dotRef.current?.style.setProperty("--p", p.toFixed(4));
     };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(raf);
-    };
-  }, []);
+    apply(scrollYProgress.get());
+    return scrollYProgress.on("change", apply);
+  }, [scrollYProgress]);
 
   return (
     <div className="scroll-thread" aria-hidden>

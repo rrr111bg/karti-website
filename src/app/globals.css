@@ -43,7 +43,11 @@
   --font-wordmark: var(--font-wordmark), "Italiana", ui-serif, Georgia, serif;
   --font-label: var(--font-label), "Work Sans", ui-sans-serif, system-ui, sans-serif;
 
+  /* ─── Radius-systeem ────────────────────────
+     Interactief (knoppen, pills) = pill; kaarten en vlakken = hoekig (0);
+     cirkels alleen voor portret + gold dots (architecturale elementen). */
   --radius-pill: 40px;
+  --radius-card: 0px;
 
   /* ─── Motion-taal: kalm, architecturaal, organisch ── */
   --motion-quick: 200ms;                /* hovers, kleuren */
@@ -417,12 +421,7 @@
     transform: translateY(0);
   }
 
-  /* ─── Testimonials carousel fade ─────────── */
-  .carousel-slide {
-    transition: opacity 700ms ease-in-out;
-  }
-
-  /* ─── Revision 3: gradient, reveals, carousel progress, arrow slide ─── */
+  /* ─── Revision 3: gradient, reveals, arrow slide ─── */
 
   /* Rose gradient text (Herkenning deep-rose quote) */
   .text-gradient-rose {
@@ -786,17 +785,6 @@
     .roots-dot { opacity: var(--dot-o, 0.8); animation: none; }
   }
 
-  /* Carousel progress bar (7s timer) */
-  @keyframes carousel-progress {
-    from { transform: scaleX(0); }
-    to   { transform: scaleX(1); }
-  }
-  .carousel-progress-bar {
-    transform-origin: left center;
-    animation: carousel-progress 7000ms linear forwards;
-    will-change: transform;
-  }
-
   /* Button arrow slide on hover */
   .btn-primary svg,
   .btn-primary-lg svg,
@@ -868,45 +856,31 @@
     box-shadow: 0 30px 70px -24px rgba(176, 141, 62, 0.45);
   }
 
-  /* Bouwstenen tall-section height only on lg+ so mobile fallback isn't 600vh tall */
-  @media (min-width: 1024px) {
-    .bouwstenen-tall {
-      height: calc(var(--bouwstenen-steps, 6) * 100vh);
+  /* ─── PinnedScene: sticky-scrub scènes ───────
+     Track alleen actief onder html.js, op lg+ en zonder reduced-motion;
+     in alle andere gevallen toont .pin-fallback de statische stapel.
+     Cruciaal: geen overflow-hidden op ancestors van .pin-stage (sticky
+     sneuvelt); bleeds horen in binnenste overflow-clip wrappers. */
+  .pin-track { display: none; }
+  @media (min-width: 1024px) and (prefers-reduced-motion: no-preference) {
+    html.js .pin-track {
+      display: block;
+      position: relative;
+      height: calc(var(--beats, 4) * 110vh + 100vh);
     }
+    html.js .pin-stage {
+      position: sticky;
+      top: 0;
+      height: 100dvh;
+    }
+    html.js .pin-scene > .pin-fallback { display: none; }
   }
 
-  /* Bouwstenen pinned experience — card transitions */
-  .bw-card-stage {
-    transition: opacity 800ms cubic-bezier(.16,.84,.32,1),
-                transform 800ms cubic-bezier(.16,.84,.32,1);
-    will-change: opacity, transform;
-  }
-  .bw-rail-number {
-    transition: color 500ms ease, opacity 500ms ease, font-size 500ms ease;
-    font-family: var(--font-wordmark), "Italiana", ui-serif, Georgia, serif;
-    letter-spacing: 0.08em;
-  }
-
-  /* ─── Section blend zones (Dawn ↔ Night Bloom) ─── */
-  .section-blend-to-noir::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 48px;
-    background: linear-gradient(to bottom, transparent, #1a1614);
-    pointer-events: none;
-  }
-  .section-blend-from-noir::before {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    height: 48px;
-    background: linear-gradient(to top, transparent, #1a1614);
-    pointer-events: none;
+  /* DrawPath: zonder JS nooit onzichtbare paden (decoratie blijft
+     progressive enhancement, nooit verborgen content) */
+  html:not(.js) .draw-path {
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
   }
 
   /* ─── Anker-navigatie: secties nooit onder de sticky header ─── */
