@@ -901,6 +901,51 @@
     border-bottom: 1px solid rgba(176, 141, 62, 0.2);
   }
 
+  /* ─── Bouwstenen: asymmetrische bento ───────
+     Zes cellen: Blueprint featured 2x2, drie brede, twee kleine.
+     Mobiel: één kolom in contentvolgorde. */
+  .bento {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 1024px) {
+    .bento {
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-areas:
+        "bs-a bs-a bs-b bs-b"
+        "bs-a bs-a bs-c bs-d"
+        "bs-e bs-e bs-f bs-f";
+      gap: 24px;
+    }
+  }
+  @media (max-width: 1023px) {
+    .bento .bento-cell { grid-area: auto !important; }
+  }
+  /* gouden blueprint-dot-textuur voor de featured cel */
+  .blueprint-grid {
+    background-image: radial-gradient(rgba(176, 141, 62, 0.14) 1px, transparent 1px);
+    background-size: 26px 26px;
+    background-color: #faf6f0;
+  }
+
+  /* ─── PhotoSlot: gereserveerd editorial-paneel ─── */
+  .photo-slot {
+    background: #b06b72;
+    box-shadow: var(--shadow-card);
+  }
+  .photo-slot-mark {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-wordmark), "Italiana", ui-serif, Georgia, serif;
+    font-size: 15px;
+    letter-spacing: 0.3em;
+    color: rgba(251, 247, 243, 0.7);
+  }
+
   /* ─── PinnedScene: sticky-scrub scènes ───────
      Track alleen actief onder html.js, op lg+ en zonder reduced-motion;
      in alle andere gevallen toont .pin-fallback de statische stapel.
