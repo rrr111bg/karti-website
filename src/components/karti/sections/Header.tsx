@@ -29,7 +29,7 @@ export function Header() {
   return (
     <>
     <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
-      <div className="container-wide flex items-center justify-between py-3 sm:py-4 lg:py-5">
+      <div className="container-wide flex items-center justify-between h-[64px] sm:h-[72px]">
         <Link href="/" className="t0-wordmark header-wordmark whitespace-nowrap text-[#3d3228]">
           K A R T I
         </Link>

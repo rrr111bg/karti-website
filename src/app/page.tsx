@@ -1,5 +1,6 @@
 import { Header } from "@/components/karti/sections/Header";
 import { Hero } from "@/components/karti/sections/Hero";
+import { TrustBand } from "@/components/karti/sections/TrustBand";
 import { BewijsOnderHero } from "@/components/karti/sections/BewijsOnderHero";
 import { Herkenning } from "@/components/karti/sections/Herkenning";
 import { Verschuiving } from "@/components/karti/sections/Verschuiving";
@@ -20,6 +21,7 @@ export default function Page() {
       <Header />
       <main>
         <Hero />
+        <TrustBand />
         <BewijsOnderHero />
         <Herkenning />
         <Verschuiving />

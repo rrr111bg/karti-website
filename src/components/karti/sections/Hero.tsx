@@ -8,13 +8,18 @@ import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
 import { RootsVisual } from "@/components/karti/RootsVisual";
 import { SpotlightPortrait } from "@/components/karti/SpotlightPortrait";
 import { MagneticButton } from "@/components/karti/MagneticButton";
+import { RevealWords } from "@/components/karti/RevealWords";
+import { PortraitArcs } from "@/components/karti/PortraitArcs";
+import { ParallaxLayer } from "@/components/karti/motion/ParallaxLayer";
 
-/* Hero: het gewortelde portret (Dawn)
-   Concept B uit de designrichting: een organisch groeiend wortelsysteem
-   in goud op Sandstone. SVG-basis voor iedereen (ook in-app browsers,
-   ook zonder JS), WebGL-diepte alleen op apparaten die het aankunnen.
-   Mobiel staat de volledige waardepropositie plus match-call CTA boven
-   de vouw; het portret wortelt direct daaronder in het stelsel. */
+/* Hero: het gewortelde portret (Dawn), elevatie-compositie.
+   Asymmetrische split; het portret groeit op xl voorbij de gridlijn en
+   wordt omringd door drie architecturale deelbogen met scroll-parallax.
+   Exact vier tekstelementen (eyebrow, kop, subtekst, CTA-paar); de
+   trustline en de-risk-tokens leven in de TrustBand hieronder.
+   Het wortelstelsel parallaxt alleen in de WebGL-scene zelf; de
+   SVG-basis blijft stil (geen dubbele beweging).
+   Mobiel behoudt de bewezen gecentreerde stapel met CTA boven de vouw. */
 export function Hero() {
   // Split pull quote: main text in bark, "Over jezelf." in deep rose
   const pull = HERO.pullQuote;
@@ -34,27 +39,31 @@ export function Hero() {
         fadeLeft
         className="absolute inset-x-0 bottom-0 h-[38%] sm:h-[50%] lg:h-[68%]"
       />
-      <ArchitecturalArcIcon
-        aria-hidden
-        className="absolute -right-28 -top-40 w-[560px] h-[560px] text-[#c9a854] opacity-[0.07]"
-      />
+      <ParallaxLayer
+        className="absolute -right-28 -top-40 w-[560px] h-[560px] pointer-events-none"
+        from={20}
+        to={-46}
+      >
+        <ArchitecturalArcIcon
+          aria-hidden
+          className="w-full h-full text-[#c9a854] opacity-[0.07]"
+        />
+      </ParallaxLayer>
 
-      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
+      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
         {/* Content: waardepropositie + CTA, mobiel als eerste in beeld;
             mobiel gecentreerd, desktop links-editorial */}
         <div className="max-w-[660px] min-w-0 mx-auto lg:mx-0 text-center lg:text-left">
           <div className="t6-label text-[#80662c] mb-6 hero-enter-item" style={enter(0)}>
             {HERO.label}
           </div>
-          <h1 className="t1-hero text-[#3d3228]" style={{ fontSize: "clamp(34px, 8.4vw, 68px)" }}>
-            <span className="hero-enter-item inline-block" style={enter(60)}>
-              {HERO.headline[0]}
-            </span>
-            <br />
-            <span className="hero-enter-item inline-block" style={enter(180)}>
-              {HERO.headline[1]}
-            </span>
-          </h1>
+          <RevealWords
+            as="h1"
+            lines={[HERO.headline[0], HERO.headline[1]]}
+            staggerMs={40}
+            className="t1-hero text-[#3d3228]"
+            style={{ fontSize: "clamp(34px, 8.4vw, 68px)" }}
+          />
           <hr className="gold-divider gold-divider-enter my-7 mx-auto lg:mx-0" style={enter(300)} />
           <p className="t3-quote text-[#3d3228] mb-9 hero-enter-item" style={enter(380)}>
             {pullHead}
@@ -76,34 +85,26 @@ export function Hero() {
               {HERO.secondaryCta}
             </a>
           </div>
-          <div className="t6-label text-[#6e6557] mt-5 hero-enter-item" style={enter(550)}>
-            {HERO.ctaSub}
-          </div>
-          <div
-            className="flex items-center justify-center lg:justify-start gap-3 mt-9 hero-enter-item"
-            style={enter(630)}
-          >
-            <span className="gold-dot" aria-hidden />
-            <span className="t4-body text-[#2e2622]" style={{ fontSize: "15px" }}>
-              {HERO.trustLine}
-            </span>
-          </div>
         </div>
 
-        {/* Portret in fine-line ringen, geworteld in het stelsel */}
+        {/* Portret: op lg+ groter en voorbij de gridlijn, omringd door
+            architecturale deelbogen; mobiel de vertrouwde fijne ring */}
         <div
           className="relative flex justify-center lg:justify-end min-w-0 hero-enter-item"
           style={enter(420)}
         >
-          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[330px] lg:h-[330px] xl:w-[400px] xl:h-[400px]">
+          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[380px] lg:h-[380px] xl:w-[460px] xl:h-[460px] lg:translate-x-10 xl:translate-x-16">
             <div
               aria-hidden
-              className="absolute -inset-5 rounded-full border border-[#c9a854]/40"
+              className="lg:hidden absolute -inset-5 rounded-full border border-[#c9a854]/40"
             />
-            <div
-              aria-hidden
-              className="hidden lg:block absolute -inset-10 rounded-full border border-[#c9a854]/20"
-            />
+            <ParallaxLayer
+              className="hidden lg:block absolute -inset-16 xl:-inset-24 pointer-events-none"
+              from={26}
+              to={-26}
+            >
+              <PortraitArcs className="w-full h-full" />
+            </ParallaxLayer>
             <SpotlightPortrait />
             <div className="absolute -bottom-2 -left-7 gold-dots-cluster" aria-hidden>
               <span />

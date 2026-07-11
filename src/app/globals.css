@@ -856,6 +856,12 @@
     box-shadow: 0 30px 70px -24px rgba(176, 141, 62, 0.45);
   }
 
+  /* ─── TrustBand: hairline-metadataband onder de hero ─── */
+  .trust-band {
+    border-top: 1px solid rgba(176, 141, 62, 0.2);
+    border-bottom: 1px solid rgba(176, 141, 62, 0.2);
+  }
+
   /* ─── PinnedScene: sticky-scrub scènes ───────
      Track alleen actief onder html.js, op lg+ en zonder reduced-motion;
      in alle andere gevallen toont .pin-fallback de statische stapel.
