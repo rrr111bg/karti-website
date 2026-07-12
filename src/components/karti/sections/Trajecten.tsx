@@ -4,9 +4,9 @@ import Link from "next/link";
 import { MoonIcon } from "@/components/icons";
 import { TRAJECTEN, BEWIJS } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
+import { voorkomWees } from "@/lib/tekst";
 import { RevealWords } from "@/components/karti/RevealWords";
 import { TiltCard } from "@/components/karti/TiltCard";
-import { QuoteBand } from "./QuoteBand";
 
 /* Trajecten */
 export function Trajecten() {
@@ -21,16 +21,19 @@ export function Trajecten() {
             {TRAJECTEN.subline}
           </p>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
+        {/* Asymmetrisch drieluik: de featured Body & Being Guide is breder,
+            hoger en donker (het enige Night-Bloom-kaartmoment aan de
+            Dawn-kant); de flanken zijn bewust rustiger. */}
+        <div className="grid grid-cols-1 lg:grid-cols-[0.95fr_1.35fr_0.95fr] gap-8 items-stretch">
           {TRAJECTEN.cards.map((card) => {
             const featured = card.featured;
             return (
               <TiltCard key={card.name} className="flex">
               <div
-                className={`relative flex flex-col w-full p-10 card-lift ${
+                className={`relative flex flex-col w-full card-lift ${
                   featured
-                    ? "night-bloom border border-[#b08d3e] lg:-mt-6 lg:mb-0 card-lift-featured"
-                    : "bg-[#faf6f0] border border-[#b08d3e]/30"
+                    ? "night-bloom border border-[#b08d3e] p-10 lg:p-12 lg:-mt-10 lg:mb-0 card-lift-featured"
+                    : "bg-[#faf6f0] border border-[#b08d3e]/30 p-10 lg:mt-2"
                 }`}
               >
                 {featured && <div className="velvet-texture" />}
@@ -109,13 +112,20 @@ export function Trajecten() {
           })}
         </div>
 
-        {/* Bewijs op het beslismoment: haar Blueprint, in klantenwoorden */}
-        <div className="mt-12 lg:mt-16 max-w-[720px] mx-auto bg-[#faf6f0] border border-[#b08d3e]/30 px-8 py-10 lg:px-12">
-          <QuoteBand
-            quote={BEWIJS.prijzen.quote}
-            name={BEWIJS.prijzen.name}
-            context={BEWIJS.prijzen.context}
-          />
+        {/* Bewijs op het beslismoment: haar Blueprint als marge-annotatie
+            rechts onder de featured kolom, geen herhaalde quoteband */}
+        <div className="mt-10 lg:mt-14 flex lg:justify-end">
+          <figure className="annotation-gold max-w-[400px]">
+            <blockquote
+              className="font-[family-name:var(--font-heading)] italic text-[#3d3228]"
+              style={{ fontSize: "17px", lineHeight: 1.55 }}
+            >
+              &ldquo;{voorkomWees(BEWIJS.prijzen.quote)}&rdquo;
+            </blockquote>
+            <figcaption className="t6-label text-[#80662c] mt-4">
+              {BEWIJS.prijzen.name} · {BEWIJS.prijzen.context}
+            </figcaption>
+          </figure>
         </div>
         <div className="mt-14 lg:mt-20 text-center max-w-[720px] mx-auto">
           <p className="t3-quote text-balance text-[#3d3228] mb-6">{TRAJECTEN.closingQuote}</p>

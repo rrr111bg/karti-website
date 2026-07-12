@@ -929,6 +929,31 @@
     background-color: #faf6f0;
   }
 
+  /* ─── Trajecten: marge-annotatie (Fatima) ─── */
+  .annotation-gold {
+    border-left: 1px solid rgba(176, 141, 62, 0.5);
+    padding-left: 22px;
+  }
+
+  /* ─── Tijdlijn: sticky-sidebar met maandcijfer ─── */
+  .tl-numeral-stack {
+    position: relative;
+    height: 220px;
+    margin-top: 48px;
+  }
+  .tl-numeral {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-wordmark), "Italiana", ui-serif, Georgia, serif;
+    font-size: clamp(140px, 13vw, 210px);
+    line-height: 1;
+    color: #b08d3e;
+    opacity: 0;
+    transition: opacity 600ms var(--ease-organic);
+  }
+  .tl-numeral.in { opacity: 0.3; }
+
   /* ─── PhotoSlot: gereserveerd editorial-paneel ─── */
   .photo-slot {
     background: #b06b72;
