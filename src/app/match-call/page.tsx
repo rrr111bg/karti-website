@@ -28,7 +28,7 @@ export default async function MatchCallPage({
   return (
     <>
       <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
-        <div className="container-wide flex items-center justify-between py-4">
+        <div className="container-wide flex items-center justify-between h-[64px] sm:h-[72px]">
           <Link href="/" className="t0-wordmark text-[#3d3228]">
             K A R T I
           </Link>
@@ -41,21 +41,21 @@ export default async function MatchCallPage({
         </div>
       </header>
 
-      <main className="bg-[#f2eae0] min-h-screen">
+      <main className="bg-[#f2eae0] min-h-[100dvh]">
         <div className="container-wide py-14 lg:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-start">
-            {/* Links: de-risk */}
+          <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 xl:gap-28 items-start">
+            {/* Links: de-risk; CSS-entrance zonder client-JS (html.js gate) */}
             <div className="max-w-[560px]">
-              <div className="t6-label text-[#80662c] mb-5">
+              <div className="t6-label text-[#80662c] mb-5 hero-enter-item" style={{ "--enter-delay": "0ms" } as React.CSSProperties}>
                 {MATCHCALL_PAGE.label}
               </div>
-              <h1 className="t2-section mb-6">{MATCHCALL_PAGE.headline}</h1>
-              <hr className="gold-divider mb-7" />
-              <p className="t4-body text-[#2e2622] mb-9">
+              <h1 className="t2-section mb-6 hero-enter-item" style={{ "--enter-delay": "80ms" } as React.CSSProperties}>{MATCHCALL_PAGE.headline}</h1>
+              <hr className="gold-divider gold-divider-enter mb-7" style={{ "--enter-delay": "200ms" } as React.CSSProperties} />
+              <p className="t4-body text-[#2e2622] mb-9 hero-enter-item" style={{ "--enter-delay": "260ms" } as React.CSSProperties}>
                 {MATCHCALL_PAGE.intro}
               </p>
 
-              <ol className="flex flex-col gap-5 mb-9">
+              <ol className="flex flex-col gap-5 mb-9 hero-enter-item" style={{ "--enter-delay": "340ms" } as React.CSSProperties}>
                 {MATCHCALL_PAGE.watWel.map((stap, i) => (
                   <li key={stap} className="flex items-start gap-4">
                     <span
@@ -73,14 +73,14 @@ export default async function MatchCallPage({
               </ol>
 
               <p
-                className="font-[family-name:var(--font-heading)] italic text-balance text-[#8b3a4a] mb-10"
-                style={{ fontSize: "clamp(18px, 1.6vw, 22px)", lineHeight: 1.5 }}
+                className="font-[family-name:var(--font-heading)] italic text-balance text-[#8b3a4a] mb-10 hero-enter-item"
+                style={{ fontSize: "clamp(18px, 1.6vw, 22px)", lineHeight: 1.5, "--enter-delay": "430ms" } as React.CSSProperties}
               >
                 {MATCHCALL_PAGE.watNiet}
               </p>
 
               {/* klein geworteld portret: zij weet wie ze gaat spreken */}
-              <div className="flex items-center gap-5">
+              <div className="flex items-center gap-5 hero-enter-item" style={{ "--enter-delay": "520ms" } as React.CSSProperties}>
                 <div className="relative w-[72px] h-[72px] flex-shrink-0">
                   <div
                     aria-hidden
@@ -96,7 +96,8 @@ export default async function MatchCallPage({
                     />
                   </div>
                 </div>
-                <div className="t4-body text-[#2e2622]" style={{ fontSize: "15px" }}>
+                <div className="t4-body text-[#2e2622] inline-flex items-center gap-3" style={{ fontSize: "15px" }}>
+                  <span className="gold-dot" aria-hidden />
                   {HERO.trustLine}
                 </div>
               </div>
