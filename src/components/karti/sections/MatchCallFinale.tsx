@@ -5,14 +5,25 @@ import { ArchitecturalArcIcon } from "@/components/icons";
 import { MATCHCALL, BEWIJS } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
 import { voorkomWees } from "@/lib/tekst";
+import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { RevealWords } from "@/components/karti/RevealWords";
 import { MagneticButton } from "@/components/karti/MagneticButton";
 import { QuoteBand } from "./QuoteBand";
 
-/* Match-call (final CTA) */
+/* Match-call finale: immersive-minimal Night Bloom slot.
+   Eén gecentreerde adem van een volle viewport: eyebrow, kop, drie kalme
+   de-risk regels (gestaggerd), bewijs op het beslismoment, de magnetische
+   CTA en de poëtische sign-off die regel voor regel oplicht. */
 export function MatchCallFinale() {
+  const { ref, inView } = useScrollReveal<HTMLDivElement>({ threshold: 0.2 });
+  const { ref: refClosing, inView: closingInView } =
+    useScrollReveal<HTMLDivElement>({ threshold: 0.4 });
+
   return (
-    <section id="matchcall" className="relative night-bloom py-20 lg:py-40 overflow-hidden">
+    <section
+      id="matchcall"
+      className="relative night-bloom py-20 lg:py-28 lg:min-h-[100dvh] lg:flex lg:flex-col lg:justify-center overflow-hidden"
+    >
       <div className="velvet-texture" />
       {/* decoratie alleen in de bovenste helft: de onderste helft blijft stil */}
       <ArchitecturalArcIcon
@@ -30,12 +41,14 @@ export function MatchCallFinale() {
           style={{ width: 80, height: 1, border: 0, background: "#c9a854", opacity: 0.8 }}
         />
         {/* De-risk in plaats van druk: wat het is, wat het niet is */}
-        <div className="max-w-[560px] mx-auto flex flex-col gap-4">
-          {MATCHCALL.derisk.map((line) => (
+        <div ref={ref} className="max-w-[560px] mx-auto flex flex-col gap-4">
+          {MATCHCALL.derisk.map((line, i) => (
             <p
               key={line}
-              className="t4-body text-balance text-[#fbf7f3]"
-              style={{ fontSize: "17px", lineHeight: 1.6 }}
+              className={`t4-body text-balance text-[#fbf7f3] scroll-reveal-init ${
+                inView ? "scroll-reveal-in" : ""
+              }`}
+              style={{ fontSize: "17px", lineHeight: 1.6, transitionDelay: `${i * 160}ms` }}
             >
               {voorkomWees(line)}
             </p>
@@ -68,13 +81,19 @@ export function MatchCallFinale() {
         </div>
         <div className="t6-label text-[#e2cda0]">{MATCHCALL.ctaSub}</div>
 
-        {/* poëtische sign-off, in stilte */}
-        <div className="mt-14 lg:mt-20">
-          {MATCHCALL.closing.map((line) => (
+        {/* poëtische sign-off: regel voor regel, groter en in gold-warm */}
+        <div ref={refClosing} className="mt-14 lg:mt-20">
+          {MATCHCALL.closing.map((line, i) => (
             <p
               key={line}
-              className="font-[family-name:var(--font-heading)] italic text-balance text-[#c9a854] mb-3"
-              style={{ fontSize: "clamp(20px, 1.8vw, 26px)", lineHeight: 1.5 }}
+              className={`font-[family-name:var(--font-heading)] italic text-balance text-[#c9a854] mb-3 scroll-reveal-init ${
+                closingInView ? "scroll-reveal-in" : ""
+              }`}
+              style={{
+                fontSize: "clamp(22px, 2.2vw, 30px)",
+                lineHeight: 1.5,
+                transitionDelay: `${i * 260}ms`,
+              }}
             >
               {line}
             </p>

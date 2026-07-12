@@ -998,6 +998,53 @@
     stroke-dashoffset: 0 !important;
   }
 
+  /* ─── NightTransition: warm schemerverloop Dawn → Night Bloom ───
+     De statische basis is de no-JS- en reduced-motion-staat; maan en
+     sterren zijn een JS-laag erbovenop (transform/opacity-only). */
+  .night-transition {
+    background: linear-gradient(
+      to bottom,
+      #faf6f0 0%,
+      #d6ccbe 24%,
+      #a67a6f 50%,
+      #56393a 74%,
+      #1a1614 100%
+    );
+  }
+
+  /* ─── Testimonials-rail: snap-scroll + voortgangshairline ─── */
+  .rail {
+    overscroll-behavior-x: contain;
+  }
+  .rail-fade {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 72px;
+    z-index: 10;
+    pointer-events: none;
+  }
+  .rail-fade-left {
+    left: 0;
+    background: linear-gradient(to right, #1a1614, transparent);
+  }
+  .rail-fade-right {
+    right: 0;
+    background: linear-gradient(to left, #1a1614, transparent);
+  }
+  .rail-progress {
+    height: 1px;
+    max-width: 320px;
+    margin-inline: auto;
+    background: rgba(201, 168, 84, 0.2);
+  }
+  .rail-progress-fill {
+    height: 1px;
+    background: #c9a854;
+    transform-origin: left center;
+    will-change: transform;
+  }
+
   /* ─── Anker-navigatie: secties nooit onder de sticky header ─── */
   section {
     scroll-margin-top: 84px;

@@ -9,6 +9,7 @@ import { Bouwstenen } from "@/components/karti/sections/Bouwstenen";
 import { OverNasra } from "@/components/karti/sections/OverNasra";
 import { Trajecten } from "@/components/karti/sections/Trajecten";
 import { Tijdlijn } from "@/components/karti/sections/Tijdlijn";
+import { NightTransition } from "@/components/karti/sections/NightTransition";
 import { Testimonials } from "@/components/karti/sections/Testimonials";
 import { MatchCallFinale } from "@/components/karti/sections/MatchCallFinale";
 import { Footer } from "@/components/karti/sections/Footer";
@@ -30,6 +31,7 @@ export default function Page() {
         <OverNasra />
         <Trajecten />
         <Tijdlijn />
+        <NightTransition />
         <Testimonials />
         <MatchCallFinale />
       </main>
