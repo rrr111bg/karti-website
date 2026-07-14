@@ -53,7 +53,7 @@ export function Footer() {
           className="mt-14 mb-6"
           style={{ width: "100%", height: 1, border: 0, background: "#c9a854", opacity: 0.25 }}
         />
-        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-[#b5aca1]">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-[13px] text-[#fbf7f3]/55">
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
             <span>{FOOTER.legal}</span>
             {FOOTER.legalLinks.map((l) => (
@@ -66,7 +66,7 @@ export function Footer() {
               </Link>
             ))}
           </div>
-          <div className="gold-dots-cluster">
+          <div className="gold-dots-cluster" aria-hidden>
             <span />
             <span />
             <span />

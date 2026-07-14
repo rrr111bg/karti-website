@@ -1,6 +1,7 @@
 "use client";
 
 import { HERO } from "@/lib/content";
+import { DeriskDots } from "@/components/karti/DeriskDots";
 
 /**
  * TrustBand: dunne metadataband direct onder de hero. Vangt de
@@ -9,7 +10,6 @@ import { HERO } from "@/lib/content";
  * architecturale gold dots, geen typografische puntjes.
  */
 export function TrustBand() {
-  const tokens = HERO.ctaSub.split(" · ");
   return (
     <aside aria-label="Praktische informatie" className="trust-band bg-[#f2eae0]">
       <div className="container-wide flex flex-col items-center gap-2 py-4 md:flex-row md:justify-between md:gap-6 md:py-0 md:h-[56px]">
@@ -17,14 +17,7 @@ export function TrustBand() {
           <span className="gold-dot" aria-hidden />
           {HERO.trustLine}
         </span>
-        <span className="t6-label text-[#6e6557] inline-flex flex-wrap justify-center items-center gap-3">
-          {tokens.map((t, i) => (
-            <span key={t} className="inline-flex items-center gap-3">
-              {i > 0 && <span className="gold-dot" aria-hidden />}
-              {t}
-            </span>
-          ))}
-        </span>
+        <DeriskDots text={HERO.ctaSub} className="t6-label text-[#6e6557] justify-center" />
       </div>
     </aside>
   );

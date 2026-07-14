@@ -8,6 +8,7 @@ import { voorkomWees } from "@/lib/tekst";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { RevealWords } from "@/components/karti/RevealWords";
 import { MagneticButton } from "@/components/karti/MagneticButton";
+import { DeriskDots } from "@/components/karti/DeriskDots";
 import { QuoteBand } from "./QuoteBand";
 
 /* Match-call finale: immersive-minimal Night Bloom slot.
@@ -79,7 +80,9 @@ export function MatchCallFinale() {
             </Link>
           </MagneticButton>
         </div>
-        <div className="t6-label text-[#e2cda0]">{MATCHCALL.ctaSub}</div>
+        <div className="t6-label text-[#e2cda0]">
+          <DeriskDots text={MATCHCALL.ctaSub} className="justify-center" />
+        </div>
 
         {/* poëtische sign-off: regel voor regel, groter en in gold-warm */}
         <div ref={refClosing} className="mt-14 lg:mt-20">

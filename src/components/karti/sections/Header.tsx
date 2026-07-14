@@ -1,13 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
 import { MenuIcon, CloseIcon } from "@/components/icons";
 import { NAV_LINKS, HERO } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
+import { DeriskDots } from "@/components/karti/DeriskDots";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  // trigger dat het menu opende: focus keert hier terug bij sluiten
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  // container van de dialog: bron voor de focusbare elementen in de trap
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   // scroll-lock terwijl het menu open is
   useEffect(() => {
@@ -25,6 +30,37 @@ export function Header() {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [menuOpen]);
+
+  // focus terug naar de hamburger-trigger zodra het menu sluit
+  useEffect(() => {
+    if (!menuOpen) return;
+    const trigger = triggerRef.current;
+    return () => {
+      trigger?.focus();
+    };
+  }, [menuOpen]);
+
+  // focus-trap: Tab/Shift+Tab wrapt binnen de open dialog
+  const trapFocus = (e: ReactKeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== "Tab") return;
+    const container = dialogRef.current;
+    if (!container) return;
+    const focusables = container.querySelectorAll<HTMLElement>(
+      'a[href], button, [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusables.length === 0) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (e.shiftKey) {
+      if (document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      }
+    } else if (document.activeElement === last) {
+      e.preventDefault();
+      first.focus();
+    }
+  };
 
   return (
     <>
@@ -53,6 +89,7 @@ export function Header() {
             <span className="hidden sm:inline">{HERO.primaryCta}</span>
           </Link>
           <button
+            ref={triggerRef}
             type="button"
             className="xl:hidden text-[#3d3228] p-2 -mr-2"
             aria-label="Menu openen"
@@ -70,6 +107,8 @@ export function Header() {
           containing block voor deze fixed overlay */}
       {menuOpen && (
         <div
+          ref={dialogRef}
+          onKeyDown={trapFocus}
           id="mobiel-menu"
           role="dialog"
           aria-modal="true"
@@ -109,7 +148,7 @@ export function Header() {
             </Link>
           </nav>
           <div className="relative pb-10 text-center t6-label text-[#e2cda0]">
-            {HERO.ctaSub}
+            <DeriskDots text={HERO.ctaSub} className="justify-center" />
           </div>
         </div>
       )}

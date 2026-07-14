@@ -50,7 +50,7 @@ export function Hero() {
         />
       </ParallaxLayer>
 
-      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88vh]">
+      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88dvh]">
         {/* Content: waardepropositie + CTA, mobiel als eerste in beeld;
             mobiel gecentreerd, desktop links-editorial */}
         <div className="max-w-[660px] min-w-0 mx-auto lg:mx-0 text-center lg:text-left">
