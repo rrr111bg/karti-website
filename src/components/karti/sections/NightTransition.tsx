@@ -3,6 +3,8 @@
 import { useRef } from "react";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 
+import { AmbientVideo } from "@/components/karti/AmbientVideo";
+
 /* NightTransition: de Dawn-naar-Night overgang als bewust scroll-moment
    tussen Tijdlijn en Testimonials. De basis is een statisch warm
    schemerverloop (precies wat no-JS en reduced-motion zien); met scroll
@@ -52,6 +54,12 @@ export function NightTransition() {
       aria-hidden
       className="night-transition pointer-events-none relative h-[32vh] lg:h-[50vh] overflow-clip"
     >
+      {/* Schemerlucht onder maan en sterren. De roze horizon van de clip
+          valt samen met de #56393a-stap van het verloop, dus de laag
+          verrijkt de Dawn-naar-Night-boog in plaats van ermee te vechten.
+          Het verloop blijft de basis: dat is wat no-JS en poster tonen. */}
+      <AmbientVideo name="karti-nacht-band" className="nacht-ambient" />
+
       <motion.div
         className="absolute left-1/2 top-[38%] -translate-x-1/2"
         style={{ y: moonY, opacity: moonOpacity }}

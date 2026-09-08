@@ -202,7 +202,7 @@ export const NASRA = {
     "Ik combineer mijn medische achtergrond met diepgaande kennis van hormonen, darmen, voeding en emotionele patronen. Waar nodig verweef ik elementen uit het islamitische kader, niet als religie, maar als praktische wijsheid voor rust en regulatie.",
   ],
   deepRoseQuote: "Gezondheid begint niet bij wat je eet. Het begint bij wat je voelt.",
-  secondaryCta: "Plan een gratis match-call",
+  secondaryCta: "Plan mijn gratis match-call",
 } as const;
 
 export const TRAJECTEN = {

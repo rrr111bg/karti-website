@@ -5,6 +5,7 @@ import type { CSSProperties } from "react";
 import { ArrowRight, ArchitecturalArcIcon } from "@/components/icons";
 import { HERO } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
+import { AmbientVideo } from "@/components/karti/AmbientVideo";
 import { RootsVisual } from "@/components/karti/RootsVisual";
 import { SpotlightPortrait } from "@/components/karti/SpotlightPortrait";
 import { MagneticButton } from "@/components/karti/MagneticButton";
@@ -33,6 +34,11 @@ export function Hero() {
 
   return (
     <section className="relative overflow-hidden bg-[#f2eae0]">
+      {/* Ambient: linnen en pleisterwerk in ochtendlicht, gespiegeld zodat
+          het gordijn áchter het portret valt en de tekstkolom vlak blijft.
+          Een scrim brengt het terug tot textuur; het is geen beeld. */}
+      <AmbientVideo name="karti-hero-dawn" flip className="hero-ambient" />
+
       {/* Wortelsysteem: groeit vanuit de grond onder het portret;
           op desktop gemaskeerd weg van de contentkolom */}
       <RootsVisual
