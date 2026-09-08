@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState, type KeyboardEvent as ReactKeyboardEvent } from "react";
+import { useMotionValueEvent, useScroll } from "motion/react";
 import { MenuIcon, CloseIcon } from "@/components/icons";
 import { NAV_LINKS, HERO } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
@@ -9,6 +10,14 @@ import { DeriskDots } from "@/components/karti/DeriskDots";
 
 export function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  /* Boven de cinematische hero zweeft de header transparant; zodra je
+     scrollt trekt hij dicht. Via Motion i.p.v. een scroll-listener, en
+     de begintoestand is deterministisch false zodat server en client
+     hetzelfde renderen. */
+  const [solid, setSolid] = useState(false);
+  const { scrollY } = useScroll();
+  useMotionValueEvent(scrollY, "change", (v) => setSolid(v > 40));
   // trigger dat het menu opende: focus keert hier terug bij sluiten
   const triggerRef = useRef<HTMLButtonElement>(null);
   // container van de dialog: bron voor de focusbare elementen in de trap
@@ -64,12 +73,16 @@ export function Header() {
 
   return (
     <>
-    <header className="sticky top-0 z-40 bg-[#f2eae0]/90 backdrop-blur-md border-b border-[#b08d3e]/25">
+    <header
+      className={`site-header fixed top-0 inset-x-0 z-40 ${
+        solid ? "site-header--solid" : "site-header--over"
+      }`}
+    >
       <div className="container-wide flex items-center justify-between h-[64px] sm:h-[72px]">
-        <Link href="/" className="t0-wordmark header-wordmark whitespace-nowrap text-[#3d3228]">
+        <Link href="/" className="t0-wordmark header-wordmark whitespace-nowrap header-ink">
           K A R T I
         </Link>
-        <nav className="hidden xl:flex items-center gap-9 t6-label text-[#3d3228]">
+        <nav className="hidden xl:flex items-center gap-9 t6-label header-ink">
           {NAV_LINKS.map((l) => (
             <a
               key={l.href}
@@ -91,7 +104,7 @@ export function Header() {
           <button
             ref={triggerRef}
             type="button"
-            className="xl:hidden text-[#3d3228] p-2 -mr-2"
+            className="xl:hidden header-ink p-2 -mr-2"
             aria-label="Menu openen"
             aria-expanded={menuOpen}
             aria-controls="mobiel-menu"

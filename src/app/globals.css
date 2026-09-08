@@ -1068,26 +1068,141 @@
     transform: scaleX(-1);
   }
 
-  /* Hero: de tekstkolom links blijft vlak zandsteen, rechts mag de
-     textuur doorkomen achter het portret. Onderaan uitfaden zodat het
-     wortelstelsel schoon leest. */
-  .hero-ambient {
-    opacity: 0.7;
+  /* ─── Header die over de hero zweeft ──────────────────────────
+     Boven de vouw transparant met crème inkt op de donkere hemel;
+     zodra je scrollt trekt hij dicht naar de zandsteen balk. */
+  .site-header {
+    --header-ink: #3d3228;
+    transition: background var(--motion-primary) var(--ease-organic),
+                border-color var(--motion-primary) var(--ease-organic),
+                backdrop-filter var(--motion-primary) var(--ease-organic);
+    border-bottom: 1px solid transparent;
   }
-  .hero-ambient::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
+  .site-header--over {
+    --header-ink: #f4ece2;
+    background: transparent;
+    backdrop-filter: none;
+  }
+  .site-header--solid {
+    background: rgba(242, 234, 224, 0.9);
+    backdrop-filter: blur(12px);
+    border-bottom-color: rgba(176, 141, 62, 0.25);
+  }
+  .header-ink {
+    color: var(--header-ink);
+    transition: color var(--motion-primary) var(--ease-organic);
+  }
+
+  /* ─── Cinematische hero ───────────────────────────────────────
+     Volle breedte hemel met de wortels als goudlijnwerk ertegen.
+     Licht of donker is één klassewissel: hero-cinema--noir zet de
+     inkt-tokens en de scrim om. De wortels zelf zijn al goud
+     (#b08d3e / #c9a854) en werken dus op beide gronden. */
+  .hero-cinema {
+    /* De kleur van de sectie eronder. De hero lost daarin op, zodat een
+       donkere hemel niet als harde rand tegen de crème body botst. */
+    --hero-fade-to: #f2eae0;
+    --hero-ground: #f2eae0;
+    --hero-ink: #3d3228;
+    --hero-accent: #8b3a4a;
+    --hero-eyebrow: #80662c;
+    --hero-outline-ink: #2e2622;
+    --hero-scrim:
       linear-gradient(
         to right,
-        rgba(242, 234, 224, 0.96) 0%,
-        rgba(242, 234, 224, 0.8) 30%,
-        rgba(242, 234, 224, 0.28) 58%,
-        rgba(242, 234, 224, 0.5) 100%
+        rgba(242, 234, 224, 0.88) 0%,
+        rgba(242, 234, 224, 0.62) 46%,
+        rgba(242, 234, 224, 0.18) 78%,
+        rgba(242, 234, 224, 0.34) 100%
       ),
-      linear-gradient(to top, #f2eae0 4%, rgba(242, 234, 224, 0) 42%);
+      linear-gradient(to top, var(--hero-fade-to) 1%, rgba(242, 234, 224, 0) 38%);
+    background: var(--hero-ground);
   }
+
+  .hero-cinema--noir {
+    --hero-ground: #1a1614;
+    --hero-ink: #f4ece2;
+    --hero-accent: #dcc078;
+    --hero-eyebrow: #c9a854;
+    --hero-outline-ink: #f4ece2;
+    --hero-scrim:
+      linear-gradient(
+        to right,
+        rgba(26, 22, 20, 0.84) 0%,
+        rgba(26, 22, 20, 0.58) 46%,
+        rgba(26, 22, 20, 0.18) 78%,
+        rgba(26, 22, 20, 0.4) 100%
+      ),
+      linear-gradient(to top, var(--hero-fade-to) 0%, rgba(26, 22, 20, 0) 34%);
+  }
+
+  .hero-cinema__bg {
+    opacity: 1;
+  }
+
+  /* De hemel krijgt speelruimte: hij zakt 12% en schaalt naar 1.1, dus
+     zonder overmaat zou je de randen onderuit zien komen. */
+  .hero-cinema__sky {
+    position: absolute;
+    inset: -10% -5%;
+    will-change: transform;
+  }
+
+  .hero-cinema__vignette {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      124% 86% at 50% 36%,
+      transparent 44%,
+      rgba(26, 22, 20, 0.44) 100%
+    );
+  }
+
+  /* Filmkorrel: bindt de gegenereerde clip aan het ontwerp en haalt de
+     gladde voorraadbeeld-look eraf. Statische tegel, geen live filter. */
+  .hero-cinema__grain {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+  }
+
+  /* Hero-kop: eigen schaal, niet t1-hero. Tracking-inversie hoort hierbij,
+     negatief zodra de letters echt groot worden. */
+  .hero-cinema__head {
+    font-family: var(--font-heading), "Lora", ui-serif, Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(38px, 9vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.025em;
+    color: var(--hero-ink);
+    text-wrap: balance;
+  }
+  .hero-cinema__scrim {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: var(--hero-scrim);
+  }
+  .hero-cinema__roots {
+    opacity: 0.85;
+  }
+  .hero-cinema__arc {
+    color: #c9a854;
+    opacity: 0.09;
+  }
+  .hero-cinema__eyebrow { color: var(--hero-eyebrow); }
+  .hero-cinema__head { color: var(--hero-ink); }
+  .hero-cinema__sub { color: var(--hero-ink); }
+  .hero-cinema__accent { color: var(--hero-accent); }
+
+  /* De outline-knop draagt vaste donkere inkt; op een noir hero moet
+     die meebewegen, anders verdwijnt het label. */
+  .hero-cinema .btn-outline-gold { color: var(--hero-outline-ink); }
 
   /* Nachtband: alleen in de onderhelft, waar het verloop zelf al
      schemert. Boven blijft de Dawn-crème onaangeroerd. */

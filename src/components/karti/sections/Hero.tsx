@@ -1,28 +1,57 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties } from "react";
+import { useRef, type CSSProperties } from "react";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
 import { ArrowRight, ArchitecturalArcIcon } from "@/components/icons";
 import { HERO } from "@/lib/content";
 import { EVENT_MATCHCALL, matchCallHref } from "@/lib/links";
 import { AmbientVideo } from "@/components/karti/AmbientVideo";
 import { RootsVisual } from "@/components/karti/RootsVisual";
-import { SpotlightPortrait } from "@/components/karti/SpotlightPortrait";
 import { MagneticButton } from "@/components/karti/MagneticButton";
 import { RevealWords } from "@/components/karti/RevealWords";
-import { PortraitArcs } from "@/components/karti/PortraitArcs";
 import { ParallaxLayer } from "@/components/karti/motion/ParallaxLayer";
 
-/* Hero: het gewortelde portret (Dawn), elevatie-compositie.
-   Asymmetrische split; het portret groeit op xl voorbij de gridlijn en
-   wordt omringd door drie architecturale deelbogen met scroll-parallax.
-   Exact vier tekstelementen (eyebrow, kop, subtekst, CTA-paar); de
-   trustline en de-risk-tokens leven in de TrustBand hieronder.
-   Het wortelstelsel parallaxt alleen in de WebGL-scene zelf; de
-   SVG-basis blijft stil (geen dubbele beweging).
-   Mobiel behoudt de bewezen gecentreerde stapel met CTA boven de vouw. */
+/* Hero: cinematische hemel op gouden uur, volle breedte.
+
+   Het portret is hier weg; Nasra's gezicht draagt de Over Nasra-sectie,
+   waar het meer werk doet dan als decoratie naast de kop.
+
+   Wat dit Karti houdt en niet zomaar een mooie lucht: de onderrand lost
+   op in het crème van de pagina, en daar groeit het wortelstelsel als
+   goudlijnwerk de hemel in. Zonder die twee is dit een voorraadbeeld
+   met tekst erover.
+
+   Vier bewegingslagen, elk met een reden:
+   1. de hemel zakt en schaalt heel traag mee met scroll  -> diepte
+   2. de content tilt op en vervaagt bij het verlaten     -> overdracht
+   3. filmkorrel over het geheel                          -> bindt de clip
+      aan het ontwerp en haalt de voorraadbeeld-look eraf
+   4. vignet                                              -> focus
+   Alles transform/opacity, en alles plat onder reduced-motion.
+
+   Nog steeds exact vier tekstelementen (eyebrow, kop, subtekst, CTA-paar);
+   trustline en de-risk-tokens leven in de TrustBand hieronder. */
+
+/* Eén plek om de clip te wisselen. */
+const HERO_CLIP = "karti-hero-cinema";
+
 export function Hero() {
-  // Split pull quote: main text in bark, "Over jezelf." in deep rose
+  const ref = useRef<HTMLElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"],
+  });
+
+  // De hemel beweegt trager dan de pagina en schaalt bijna onmerkbaar op.
+  const skyY = useTransform(scrollYProgress, [0, 1], reduce ? ["0%", "0%"] : ["0%", "12%"]);
+  const skyScale = useTransform(scrollYProgress, [0, 1], reduce ? [1, 1] : [1, 1.1]);
+  // De content laat de hemel los in plaats van er stug bovenop te blijven.
+  const contentY = useTransform(scrollYProgress, [0, 1], reduce ? [0, 0] : [0, -72]);
+  const contentFade = useTransform(scrollYProgress, [0, 0.78], reduce ? [1, 1] : [1, 0]);
+
+  // Split pull quote: hoofdtekst in inkt, "Over jezelf." in het accent
   const pull = HERO.pullQuote;
   const accent = "Over jezelf.";
   const pullHead = pull.endsWith(accent)
@@ -33,47 +62,63 @@ export function Hero() {
     ({ "--enter-delay": `${delay}ms` } as CSSProperties);
 
   return (
-    <section className="relative overflow-hidden bg-[#f2eae0]">
-      {/* Ambient: linnen en pleisterwerk in ochtendlicht, gespiegeld zodat
-          het gordijn áchter het portret valt en de tekstkolom vlak blijft.
-          Een scrim brengt het terug tot textuur; het is geen beeld. */}
-      <AmbientVideo name="karti-hero-dawn" flip className="hero-ambient" />
+    <section
+      ref={ref}
+      className="hero-cinema hero-cinema--noir relative overflow-hidden"
+    >
+      <motion.div
+        className="hero-cinema__sky"
+        style={{ y: skyY, scale: skyScale }}
+        aria-hidden
+      >
+        <AmbientVideo name={HERO_CLIP} className="hero-cinema__bg" />
+      </motion.div>
 
-      {/* Wortelsysteem: groeit vanuit de grond onder het portret;
-          op desktop gemaskeerd weg van de contentkolom */}
-      <RootsVisual
-        fadeLeft
-        className="absolute inset-x-0 bottom-0 h-[38%] sm:h-[50%] lg:h-[68%]"
-      />
+      {/* Scrim: draagt de leesbaarheid van de kop. Een zijwaartse wig houdt
+          de tekstkolom rustig, de onderrand lost op in de sectie eronder. */}
+      <div className="hero-cinema__scrim" aria-hidden />
+      <div className="hero-cinema__vignette" aria-hidden />
+
+      {/* Wortelstelsel als goudlijnwerk tegen de hemel */}
+      <RootsVisual className="hero-cinema__roots absolute inset-x-0 bottom-0 h-[40%] sm:h-[46%] lg:h-[54%]" />
+
       <ParallaxLayer
         className="absolute -right-28 -top-40 w-[560px] h-[560px] pointer-events-none"
         from={20}
         to={-46}
       >
-        <ArchitecturalArcIcon
-          aria-hidden
-          className="w-full h-full text-[#c9a854] opacity-[0.07]"
-        />
+        <ArchitecturalArcIcon aria-hidden className="w-full h-full hero-cinema__arc" />
       </ParallaxLayer>
 
-      <div className="container-wide relative grid grid-cols-1 lg:grid-cols-[1fr_0.9fr] items-center gap-14 lg:gap-20 pt-12 pb-36 sm:pb-40 lg:pt-20 lg:pb-44 min-h-[88dvh]">
-        {/* Content: waardepropositie + CTA, mobiel als eerste in beeld;
-            mobiel gecentreerd, desktop links-editorial */}
-        <div className="max-w-[660px] min-w-0 mx-auto lg:mx-0 text-center lg:text-left">
-          <div className="t6-label text-[#80662c] mb-6 hero-enter-item" style={enter(0)}>
+      <div className="hero-cinema__grain" aria-hidden />
+
+      <motion.div
+        style={{ y: contentY, opacity: contentFade }}
+        className="container-wide relative flex items-center pt-16 pb-32 sm:pb-36 lg:pt-24 lg:pb-40 min-h-[92dvh]"
+      >
+        <div className="max-w-[820px] min-w-0 mx-auto lg:mx-0 text-center lg:text-left">
+          <div
+            className="t6-label hero-cinema__eyebrow mb-7 hero-enter-item"
+            style={enter(0)}
+          >
             {HERO.label}
           </div>
           <RevealWords
             as="h1"
             lines={[HERO.headline[0], HERO.headline[1]]}
             staggerMs={40}
-            className="t1-hero text-[#3d3228]"
-            style={{ fontSize: "clamp(34px, 8.4vw, 68px)" }}
+            className="hero-cinema__head"
           />
-          <hr className="gold-divider gold-divider-enter my-7 mx-auto lg:mx-0" style={enter(300)} />
-          <p className="t3-quote text-[#3d3228] mb-9 hero-enter-item" style={enter(380)}>
+          <hr
+            className="gold-divider gold-divider-enter my-8 mx-auto lg:mx-0"
+            style={enter(300)}
+          />
+          <p
+            className="t3-quote hero-cinema__sub mb-10 hero-enter-item"
+            style={enter(380)}
+          >
             {pullHead}
-            <span style={{ color: "#8b3a4a" }}>{accent}</span>
+            <span className="hero-cinema__accent">{accent}</span>
           </p>
           <div
             className="flex flex-col items-center lg:items-start sm:flex-row sm:flex-wrap sm:justify-center lg:justify-start sm:items-center gap-4 hero-enter-item"
@@ -92,34 +137,7 @@ export function Hero() {
             </a>
           </div>
         </div>
-
-        {/* Portret: op lg+ groter en voorbij de gridlijn, omringd door
-            architecturale deelbogen; mobiel de vertrouwde fijne ring */}
-        <div
-          className="relative flex justify-center lg:justify-end min-w-0 hero-enter-item"
-          style={enter(420)}
-        >
-          <div className="relative w-[200px] h-[200px] sm:w-[250px] sm:h-[250px] lg:w-[380px] lg:h-[380px] xl:w-[460px] xl:h-[460px] lg:translate-x-10 xl:translate-x-16">
-            <div
-              aria-hidden
-              className="lg:hidden absolute -inset-5 rounded-full border border-[#c9a854]/40"
-            />
-            <ParallaxLayer
-              className="hidden lg:block absolute -inset-16 xl:-inset-24 pointer-events-none"
-              from={26}
-              to={-26}
-            >
-              <PortraitArcs className="w-full h-full" />
-            </ParallaxLayer>
-            <SpotlightPortrait />
-            <div className="absolute -bottom-2 -left-7 gold-dots-cluster" aria-hidden>
-              <span />
-              <span />
-              <span />
-            </div>
-          </div>
-        </div>
-      </div>
+      </motion.div>
     </section>
   );
 }
